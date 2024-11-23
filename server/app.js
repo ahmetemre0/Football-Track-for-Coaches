@@ -18,22 +18,22 @@ const tableCreator = require('./handlers/table.handler');
 tableCreator.createTable(db);
 
 const historyRouter = require('./routers/history.router');
+app.use('/history', historyRouter);
+
 const teamRouter = require('./routers/team.router');
+app.use('/team', teamRouter);
+
 const matchRouter = require('./routers/match.router');
+app.use('/match', matchRouter);
+
 const playerRouter = require('./routers/player.router');
+app.use('/player', playerRouter);
+
 const areaRouter = require('./routers/area.router');
+app.use('/area', areaRouter);
+
 const actionRouter = require('./routers/action.router');
-
-app.use('api/history', historyRouter);
-app.use('api/team', teamRouter);
-app.use('api/match', matchRouter);
-app.use('api/player', playerRouter);
-app.use('api/area', areaRouter);
-app.use('api/action', actionRouter);
-
-
-
-
+app.use('/action', actionRouter);
 
 // start the server
 app.listen(port, () => {

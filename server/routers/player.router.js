@@ -5,3 +5,5 @@ playerRouter.get('/', playerController.getPlayers);
 playerRouter.post('/', playerController.createPlayer);
 playerRouter.delete('/', playerController.deletePlayer);
 playerRouter.put('/', playerController.updatePlayer);
+
+module.exports = playerRouter;
