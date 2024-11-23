@@ -5,6 +5,10 @@ const matchTable = require('../models/match.model');
 const playerTable = require('../models/player.model');
 const areaTable = require('../models/area.model');
 
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./db.sqlite');
+
+
 const getCreatorQuery = (tableName, table) => {
     let query = `CREATE TABLE IF NOT EXISTS ${tableName} (`;
     for (let column in table) {
@@ -22,7 +26,7 @@ const getCreatorQuery = (tableName, table) => {
     return query;
 }
 
-const createTable = (db) => {
+const createTable = () => {
     db.serialize(() => {
         db.run(getCreatorQuery('history', historyTable));
         db.run(getCreatorQuery('action', actionTable));
