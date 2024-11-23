@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+const API_BASE_URL = 'http://localhost:3000';
 const Team = () => {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ const Team = () => {
         const fetchTeams = async () => {
             try {
                 setLoading(true);
-                const response = await fetch("/api/teams");
+                const response = await fetch(`${API_BASE_URL}/api/teams`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch team data");
                 }

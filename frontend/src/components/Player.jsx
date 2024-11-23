@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+const API_BASE_URL = 'http://localhost:3000';
 const Player = () => {
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ const Player = () => {
         const fetchPlayers = async () => {
             try {
                 setLoading(true);
-                const response = await fetch("/api/player");
+                const response = await fetch(`${API_BASE_URL}/api/player`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch player data");
                 }
