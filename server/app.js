@@ -10,12 +10,20 @@ app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
 
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./db.sqlite');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const path = require('path');
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.get('/', (req, res) => {
+    res.send('File upload service is running!');
+});
 
 const tableCreator = require('./handlers/table.handler');
 //tableCreator.dropTable(db);
-tableCreator.createTable(db);
+tableCreator.createTable();
 
 const historyRouter = require('./routers/history.router');
 app.use('/history', historyRouter);
