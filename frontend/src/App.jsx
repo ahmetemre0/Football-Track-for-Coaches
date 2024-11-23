@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import AddTeamPage from './pages/AddTeamPage';
 import AddPlayerPage from './pages/AddPlayerPage';
+import TeamPage from './pages/TeamPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/add-team" element={<AddTeamPage />} />
             <Route path="/add-player/:teamId" element={<AddPlayerPage />} />
+            <Route path='/teams' element={<TeamPage />} />
           </Routes>
         </main>
         <Footer />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createPlayer } from '../services/api';
 
@@ -70,8 +70,8 @@ function AddPlayerPage() {
           Add Player
         </button>
       </form>
-      <button 
-        onClick={() => navigate('/')} 
+      <button
+        onClick={() => navigate('/')}
         className="mt-4 text-blue-600 hover:underline"
       >
         Back to Home
