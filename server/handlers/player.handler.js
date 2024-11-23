@@ -77,7 +77,7 @@ exports.delete = (id) => {
 }
 
 exports.getByTeamID = (teamID) => {
-    let query = `SELECT * FROM player WHERE teamID = ${team} ORDER BY number`;
+    let query = `SELECT player.ID, player.name, player.photoPath, player.number, player.position FROM player WHERE teamID = ${teamID} ORDER BY number`;
     db.all(query, (err, rows) => {
         if (err) {
             console.error(err.message);
