@@ -2,8 +2,14 @@ const teamRouter = require('express').Router();
 const teamController = require('../controllers/team.controller');
 
 teamRouter.get('/', teamController.getTeams);
+teamRouter.get('/:id', teamController.getTeam);
+teamRouter.get('/names', teamController.getNames);
+teamRouter.get('/players', teamController.getPlayers);
+
 teamRouter.post('/', teamController.createTeam);
-teamRouter.delete('/', teamController.deleteTeam);
-teamRouter.put('/', teamController.updateTeam);
+
+teamRouter.put('/:id', teamController.updateTeam);
+
+teamRouter.delete('/:id', teamController.deleteTeam);
 
 module.exports = teamRouter;
