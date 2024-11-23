@@ -79,3 +79,17 @@ exports.update = (id, name, photoPath) => {
         })
     );
 }
+
+exports.getNames = () => {
+    let query = `SELECT name FROM team`;
+    return new Promise((resolve, reject) => {
+        db.all(query, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                reject(err); // Reject the promise on error
+            } else {
+                resolve(rows.map(row => row.name)); // Resolve the promise with the rows
+            }
+        });
+    });
+}
