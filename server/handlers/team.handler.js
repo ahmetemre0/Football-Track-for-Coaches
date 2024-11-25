@@ -46,16 +46,25 @@ exports.insert = (name, logo) => {
 
 exports.delete = (id) => {
     let query = `DELETE FROM team WHERE ID = ${id}`;
-    return new Promise((resolve, reject) =>
+    // delete all players in the team
+    let query2 = `DELETE FROM player WHERE teamID = ${id}`;
+    return new Promise((resolve, reject) => {
         db.run(query, (err) => {
             if (err) {
                 console.error(err.message);
                 reject(err); // Reject the promise on error
             } else {
-                resolve(); // Resolve the promise
+                db.run(query2, (err) => {
+                    if (err) {
+                        console.error(err.message);
+                        reject(err); // Reject the promise on error
+                    } else {
+                        resolve(); // Resolve the promise
+                    }
+                });
             }
-        })
-    );
+        });
+    });
 }
 
 exports.update = (id, name, photoPath) => {
