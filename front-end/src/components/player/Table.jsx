@@ -1,38 +1,37 @@
 import React, { useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
-import { deleteTeam, updateTeam } from "../../services/team";
+import { deletePlayer, updatePlayer } from "../../services/player";
 
 import Modal from "../common/Modal";
-import DeleteTeamModalBody from "./DeleteModal";
-import EditTeamModalBody from "./EditModal";
+import DeletePlayerModalBody from "./DeleteModal";
+import EditPlayerModalBody from "./EditModal";
 import { API_BASE_URL } from "../../services/common";
 
-const TeamTable = ({ teams }) => {
-  const [currentTeam, setCurrentTeam] = useState(null);
+const PlayerTable = ({ players }) => {
+  const [currentPlayer, setCurrentPlayer] = useState(null);
   const [form, setForm] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const openEditModal = (team) => {
-    setCurrentTeam(team);
+  const openEditModal = (player) => {
+    setCurrentPlayer(player);
     setIsEditModalOpen(true);
   };
 
-  const openDeleteModal = (team) => {
-    setCurrentTeam(team);
+  const openDeleteModal = (player) => {
+    setCurrentPlayer(player);
     setIsDeleteModalOpen(true);
   };
 
   const deleteCurrentTeam = () => {
-    deleteTeam(currentTeam?.ID);
+    deletePlayer(currentPlayer?.ID);
     setIsDeleteModalOpen(false);
     window.location.reload();
   };
 
-  const editCurrentTeam = () => {
-    console.log(form)
-    updateTeam(currentTeam.ID, form);
+  const editCurrentPlayer = () => {
+    updatePlayer(currentPlayer.ID, form);
     setIsEditModalOpen(false);
     window.location.reload();
   };
@@ -44,30 +43,30 @@ const TeamTable = ({ teams }) => {
   return (
     <>
       <div className="flex flex-wrap justify-center gap-8">
-        {teams.map((team) => (
+        {players.map((player) => (
           <div
-            key={team.ID}
+            key={player.ID}
             className="card card-compact bg-base-200 w-96 shadow-xl"
           >
             <figure>
               <img
-                src={`${API_BASE_URL}${team.logo}`}
-                alt="Team Logo"
+                src={`${API_BASE_URL}${player.imagePath}`}
+                alt="Player"
                 className="w-96 h-96 object-cover"
               />
             </figure>
             <div className="card-body">
-              <h2 className="card-title">{team.name}</h2>
+              <h2 className="card-title">{player.name}</h2>
               <div className="card-actions justify-end">
                 <div
                   className="h-12 w-12 min rounded-lg me-2 btn bg-amber-400 hover:bg-amber-500"
-                  onClick={() => openEditModal(team)}
+                  onClick={() => openEditModal(player)}
                 >
                   <FaEdit className="text-white" />
                 </div>
                 <div
                   className="h-12 w-12 min rounded-lg btn bg-red-600 hover:bg-red-700"
-                  onClick={() => openDeleteModal(team)}
+                  onClick={() => openDeleteModal(player)}
                 >
                   <FaTrash className="text-white" />
                 </div>
@@ -80,9 +79,9 @@ const TeamTable = ({ teams }) => {
       <Modal 
         isOpen={isDeleteModalOpen}
         close={() => setIsDeleteModalOpen(false)}
-        title={`Delete ${currentTeam?.name}`}
+        title={`Delete ${currentPlayer?.name}`}
       >
-        <DeleteTeamModalBody 
+        <DeletePlayerModalBody 
           handeCancel={() => setIsDeleteModalOpen(false)}
           handleProceed={deleteCurrentTeam}
         />
@@ -91,12 +90,12 @@ const TeamTable = ({ teams }) => {
       <Modal
         isOpen={isEditModalOpen}
         close={() => setIsEditModalOpen(false)}
-        title={`Edit ${currentTeam?.name}`}
+        title={`Edit ${currentPlayer?.name}`}
       >
-        <EditTeamModalBody
+        <EditPlayerModalBody
           handleCancel={() => setIsEditModalOpen(false)}
-          handleProceed={editCurrentTeam}
-          currentTeam={currentTeam}
+          handleProceed={editCurrentPlayer}
+          currentPlayer={currentPlayer}
           handleForm={handleForm}
         />
       </Modal>
@@ -104,4 +103,4 @@ const TeamTable = ({ teams }) => {
   );
 };
 
-export default TeamTable;
+export default PlayerTable;

@@ -1,13 +1,10 @@
 import React from 'react';
 
-const DeleteTeamModalBody = (props) => {
+const DeletePlayerModalBody = (props) => {
     const { handleCancel, handleProceed } = props;
     return (
         <div>
-            <p className="py-4">
-            Are you sure you want to delete this team? <br />{" "}
-            <em>Players of this team will also be deleted.</em>
-            </p>
+            <p className="py-4">Are you sure you want to delete this player?</p>
             <div className="join flex justify-end">
                 <button onClick={handleCancel} className="btn btn-ghost border-slate-700 join-item">
                 Cancel
@@ -20,4 +17,4 @@ const DeleteTeamModalBody = (props) => {
     );
 };
 
-export default DeleteTeamModalBody;
+export default DeletePlayerModalBody;

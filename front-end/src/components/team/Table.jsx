@@ -8,31 +8,31 @@ import DeleteTeamModalBody from "./DeleteModal";
 import EditTeamModalBody from "./EditModal";
 import { API_BASE_URL } from "../../services/common";
 
-const TeamTable = ({ players }) => {
-  const [currentPlayer, setCurrentPlayer] = useState(null);
+const TeamTable = ({ teams }) => {
+  const [currentTeam, setCurrentTeam] = useState(null);
   const [form, setForm] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const openEditModal = (team) => {
-    setCurrentPlayer(team);
+    setCurrentTeam(team);
     setIsEditModalOpen(true);
   };
 
   const openDeleteModal = (team) => {
-    setCurrentPlayer(team);
+    setCurrentTeam(team);
     setIsDeleteModalOpen(true);
   };
 
   const deleteCurrentTeam = () => {
-    deleteTeam(currentPlayer?.ID);
+    deleteTeam(currentTeam?.ID);
     setIsDeleteModalOpen(false);
     window.location.reload();
   };
 
   const editCurrentTeam = () => {
     console.log(form)
-    updateTeam(currentPlayer.ID, form);
+    updateTeam(currentTeam.ID, form);
     setIsEditModalOpen(false);
     window.location.reload();
   };
@@ -44,7 +44,7 @@ const TeamTable = ({ players }) => {
   return (
     <>
       <div className="flex flex-wrap justify-center gap-8">
-        {players.map((team) => (
+        {teams.map((team) => (
           <div
             key={team.ID}
             className="card card-compact bg-base-200 w-96 shadow-xl"
@@ -80,7 +80,7 @@ const TeamTable = ({ players }) => {
       <Modal 
         isOpen={isDeleteModalOpen}
         close={() => setIsDeleteModalOpen(false)}
-        title={`Delete ${currentPlayer?.name}`}
+        title={`Delete ${currentTeam?.name}`}
       >
         <DeleteTeamModalBody 
           handeCancel={() => setIsDeleteModalOpen(false)}
@@ -91,12 +91,12 @@ const TeamTable = ({ players }) => {
       <Modal
         isOpen={isEditModalOpen}
         close={() => setIsEditModalOpen(false)}
-        title={`Edit ${currentPlayer?.name}`}
+        title={`Edit ${currentTeam?.name}`}
       >
         <EditTeamModalBody
           handleCancel={() => setIsEditModalOpen(false)}
           handleProceed={editCurrentTeam}
-          currentTeam={currentPlayer}
+          currentTeam={currentTeam}
           handleForm={handleForm}
         />
       </Modal>
