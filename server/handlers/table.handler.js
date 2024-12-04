@@ -4,6 +4,7 @@ const teamTable = require('../models/team.model');
 const matchTable = require('../models/match.model');
 const playerTable = require('../models/player.model');
 const areaTable = require('../models/area.model');
+const compTable = require('../models/comp.model');
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db.sqlite');
@@ -34,6 +35,7 @@ const createTable = () => {
         db.run(getCreatorQuery('match', matchTable));
         db.run(getCreatorQuery('player', playerTable));
         db.run(getCreatorQuery('area', areaTable));
+        db.run(getCreatorQuery('comp', compTable));
     });
 }
 
@@ -45,6 +47,7 @@ const dropTable = (db) => {
         db.run('DROP TABLE IF EXISTS match');
         db.run('DROP TABLE IF EXISTS player');
         db.run('DROP TABLE IF EXISTS area');
+        db.run('DROP TABLE IF EXISTS comp');
     });
 }
 

@@ -1,5 +1,6 @@
 const Team = require('../handlers/team.handler');
 const Player = require('../handlers/player.handler');
+const Match = require('../handlers/match.handler');
 
 const multer = require('multer');
 const path = require('path');
@@ -112,7 +113,29 @@ exports.updateTeam = [
                 return;
             }
             // Update the database
+            const oldTeam = await Team.getByID(req.params.id);
             await Team.update(req.params.id, req.body.name, logoPath);
+
+            if (req.file) {
+                // Delete the old logo if a new one was uploaded
+                if (oldTeam.logo) {
+                    fs.unlinkSync(path.join(__dirname, '..', 'uploads', oldTeam.logo));
+                }
+            }
+
+            if (!req.body.name && !req.file) {
+                res.status(400).json({ message: 'Nothing to update', success: false });
+                return;
+            }
+
+            if (!req.body.name) {
+                req.body.name = oldTeam.name;
+            }
+
+            if (!req.file) {
+                logoPath = oldTeam.logo;
+            }
+
 
             res.json({
                 message: 'Team successfully updated',
@@ -131,11 +154,11 @@ exports.updateTeam = [
 
 exports.getPlayers = async (req, res) => {
     try {
-        if (!req.query.id) {
+        if (!req.params.id) {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let players = await Player.getByTeamID(req.query.id);
+        let players = await Player.getByTeamID(req.params.id);
         res.json({players: players, success: true});
     }
     catch (error) {
@@ -146,11 +169,86 @@ exports.getPlayers = async (req, res) => {
 
 exports.getNames = async (req, res) => {
     try {
-        let names = await Team.getNames();
-        res.json({names: names, success: true});
+        let teams = await Team.getNames();
+        res.json({teams: teams, success: true});
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching team names', success: false });
+    }
+}
+
+exports.getFirst11 = async (req, res) => {
+    try {
+        if (!req.params.matchid) {
+            res.status(400).json({ message: 'Match ID is required', success: false });
+            return;
+        }
+        if (!req.params.teamid) {
+            res.status(400).json({ message: 'Team ID is required', success: false });
+            return;
+        }
+        let teams = await Match.getTeams(req.params.matchid);
+        let team = teams.find(team => team.ID == req.params.teamid);
+        if (!team) {
+            res.status(400).json({ message: 'Team is not in this match', success: false });
+            return;
+        }
+        let first11 = await Team.getFirst11(req.params.matchid);
+        res.json({first11: first11, success: true});
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching first 11', success: false });
+    }
+}
+
+exports.getSquad = async (req, res) => {
+    try {
+        if (!req.params.matchid) {
+            res.status(400).json({ message: 'Match ID is required', success: false });
+            return;
+        }
+        if (!req.params.teamid) {
+            res.status(400).json({ message: 'Team ID is required', success: false });
+            return;
+        }
+        let teams = await Match.getTeams(req.params.matchid);
+        let team = teams.find(team => team.ID == req.params.teamid);
+        if (!team) {
+            res.status(400).json({ message: 'Team is not in this match', success: false });
+            return;
+        }
+        let squad = await Team.getSquad(req.params.matchid, req.params.teamid);
+        res.json({squad: squad, success: true});
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching squad', success: false });
+    }
+}
+
+exports.getCurrent11 = async (req, res) => {
+    try {
+        if (!req.params.matchid) {
+            res.status(400).json({ message: 'Match ID is required', success: false });
+            return;
+        }
+        if (!req.params.teamid) {
+            res.status(400).json({ message: 'Team ID is required', success: false });
+            return;
+        }
+        let teams = await Match.getTeams(req.params.matchid);
+        let team = teams.find(team => team.ID == req.params.teamid);
+        if (!team) {
+            res.status(400).json({ message: 'Team is not in this match', success: false });
+            return;
+        }
+        let current11 = await Team.getCurrent11(req.params.matchid, req.params.teamid);
+        res.json({current11: current11, success: true});
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching current 11', success: false });
     }
 }
