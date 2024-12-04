@@ -74,7 +74,7 @@ exports.update = (id, name, photoPath) => {
         query += `name = '${name}'`;
     }
     if (photoPath) {
-        query += `, photoPath = '${photoPath}'`;
+        query += `, logo = '${photoPath}'`;
     }
     query += ` WHERE ID = ${id}`;
     return new Promise((resolve, reject) =>
