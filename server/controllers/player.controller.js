@@ -57,23 +57,40 @@ exports.createPlayer = [
     },
 ];
 
-exports.getPlayers = (req, res) => {
-    if (req.query.id) {
-        let player = Player.getByID(req.query.id);
-        res.json(player);
-        return
+exports.getPlayer = async (req, res) => {
+    try {
+        if (!req.params.id) {
+            res.status(400).json({ message: 'Player ID is required', success: false });
+            return;
+        }
+
+        let player = await Player.getByID(req.params.id);
+        res.json({ player: player, success: true });
     }
-    let players = Player.getAll();
-    res.json(players);
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching players', success: false });
+    }
+}
+
+exports.getPlayers = async (req, res) => {
+    try {
+        let players = await Player.getAll();
+        res.json({ players: players, success: true });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching players', success: false });
+    }
 }
 
 exports.deletePlayer = async (req, res) => {
     try {
         await Player.delete(req.params.id);
-        res.json({ message: 'Player successfully deleted' });
+        res.json({ message: 'Player successfully deleted', success: true });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error deleting player' });
+        res.status(500).json({ message: 'Error deleting player', success: false });
     }
 }
 

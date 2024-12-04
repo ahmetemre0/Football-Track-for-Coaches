@@ -74,7 +74,7 @@ exports.update = (id, name, photoPath) => {
         query += `name = '${name}'`;
     }
     if (photoPath) {
-        query += `, photoPath = '${photoPath}'`;
+        query += `, logo = '${photoPath}'`;
     }
     query += ` WHERE ID = ${id}`;
     return new Promise((resolve, reject) =>
@@ -90,7 +90,7 @@ exports.update = (id, name, photoPath) => {
 }
 
 exports.getNames = () => {
-    let query = `SELECT name FROM team`;
+    let query = `SELECT ID, name FROM team`;
     return new Promise((resolve, reject) => {
         db.all(query, (err, rows) => {
             if (err) {
