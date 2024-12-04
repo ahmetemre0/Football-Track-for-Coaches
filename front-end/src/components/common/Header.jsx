@@ -7,8 +7,6 @@ function Header() {
         <ul className="flex space-x-4">
           <li><Link to="/" className="hover:underline">Home</Link></li>
           <li><Link to="/about" className="hover:underline">About</Link></li>
-          <li><Link to="/contact" className="hover:underline">Contact</Link></li>
-          <li><Link to="/add-team" className="hover:underline">Add Team</Link></li>
           <li><Link to="/teams" className="hover:underline">Teams</Link></li>
         </ul>
       </nav>
