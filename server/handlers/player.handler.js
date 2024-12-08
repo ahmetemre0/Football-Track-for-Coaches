@@ -30,17 +30,19 @@ exports.getAll = () => {
 }
 
 exports.insert = (name, photoPath, teamID, number, position) => {
-    let query = `INSERT INTO player (name, photoPath, teamID, number, position) VALUES ('${name}', '${photoPath}', ${teamID}, ${number}, '${position}')`; 
-    return new Promise((resolve, reject) =>
-        db.run(query, (err) => {
+    const query = `INSERT INTO player (name, photoPath, teamID, number, position) VALUES (?, ?, ?, ?, ?)`;
+    return new Promise((resolve, reject) => {
+        db.run(query, [name, photoPath, teamID, number, position ? position : 'X'], function (err) {
             if (err) {
                 console.error(err.message);
-                reject(err);
+                reject(err); // Reject the promise with the error
+            } else {
+                resolve(this.lastID); // Resolve the promise with the last inserted row ID
             }
-            resolve();
-        })
-    );
-}
+        });
+    });
+};
+
 
 exports.addPhotoPath = (id, photoPath) => {
     let query = `UPDATE player SET photoPath = '${photoPath}' WHERE ID = ${id}`;
