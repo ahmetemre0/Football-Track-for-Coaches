@@ -1,13 +1,8 @@
-import { useEffect } from "react";
 import ScoreCard from "./ScoreCard";
 
 const MatchTable = (props) => {
 
     const { matches, onMatchClick } = props;
-
-    useEffect(() => {
-        console.log(matches);
-    }, [matches]);
 
     return (
         <>
