@@ -121,7 +121,7 @@ exports.updateTeam = [
     async (req, res) => {
         try {
             // Determine the logo path (optional)
-            const logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : path.join('/uploads/logos', 'logo.png');
+            let logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : path.join('/uploads/logos', 'logo.png');
             
             if (!req.params.id) {
                 res.status(400).json({ message: 'Team ID is required', success: false });
@@ -135,28 +135,28 @@ exports.updateTeam = [
                 return;
             }
 
-            await Team.update(req.params.id, req.body.name, logoPath);
-
+            
             if (req.file) {
                 // Delete the old logo if a new one was uploaded
                 if (oldTeam.logo) {
                     fs.unlinkSync(path.join(__dirname, '..', 'uploads', oldTeam.logo));
                 }
             }
-
+            
             if (!req.body.name && !req.file) {
                 res.status(400).json({ message: 'Nothing to update', success: false });
                 return;
             }
-
+            
             if (!req.body.name) {
                 req.body.name = oldTeam.name;
             }
-
+            
             if (!req.file) {
                 logoPath = oldTeam.logo;
             }
-
+            
+            await Team.update(req.params.id, req.body.name, logoPath);
 
             res.json({
                 message: 'Team successfully updated',
