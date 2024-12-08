@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db.sqlite');
 
 exports.getByID = (id) => {
-    let query = `SELECT player.ID, player.name, player.number, player.photoPath, team.ID, team.name FROM player, team WHERE player.ID = ${id} AND player.teamID = team.ID`;
+    let query = `SELECT player.ID, player.name, player.number, player.photoPath, team.ID as teamID, team.name as teamName, team.logo as teamLogo FROM player, team WHERE player.ID = ${id} AND player.teamID = team.ID`;
     return new Promise((resolve, reject) => {
         db.get(query, (err, row) => {
             if (err) {
@@ -17,7 +17,7 @@ exports.getByID = (id) => {
 }
 
 exports.getAll = () => {
-    let query = `SELECT player.ID, player.name, player.number, player.photoPath, team.ID, team.name FROM player, team WHERE player.teamID = team.ID`;
+    let query = `SELECT player.ID, player.name, player.number, player.photoPath, team.ID as teamID, team.name as teamName, team.logo as teamLogo FROM player, team WHERE player.teamID = team.ID`;
     return new Promise((resolve, reject) => {
         db.all(query, (err, rows) => {
             if (err) {
