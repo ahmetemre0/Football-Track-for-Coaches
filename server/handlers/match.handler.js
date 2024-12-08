@@ -155,7 +155,7 @@ exports.getByTeamID = (teamID) => {
             WHERE
                 match.homeTeamID = ${teamID} OR match.awayTeamID = ${teamID}
         `;
-        db.run(query, (err, rows) => {
+        db.all(query, (err, rows) => {
             if (err) {
                 console.error(err.message);
                 reject(err); 
@@ -333,7 +333,7 @@ exports.getByTeams = (homeTeamID, awayTeamID) => {
                 OR
                 (match.homeTeamID = ${awayTeamID} AND match.awayTeamID = ${homeTeamID})
         `;
-        db.get(query, (err, row) => {
+        db.all(query, (err, row) => {
             if (err) {
                 console.error(err.message);
                 reject(err); 
