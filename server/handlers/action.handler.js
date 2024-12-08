@@ -27,8 +27,8 @@ exports.getAll = () => {
     });
 }
 
-exports.insert = (name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPlayer, hasToPlayer) => {
-    let query = `INSERT INTO action (name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPlayer, hasToPlayer) VALUES ('${name}', '${logo}', ${hasDoneTeamSide}, ${hasAffectedTeamSide}, ${hasByPlayer}, ${hasToPlayer})`;
+exports.insert = (name, logo, hasPlayer1, hasPlayer2, hasArea) => {
+    let query = `INSERT INTO action (name, logo, hasPlayer1, hasPlayer2, hasArea) VALUES ('${name}', '${logo}', ${hasPlayer1}, ${hasPlayer2}, ${hasArea})`;
     return new Promise((resolve, reject) => {
         db.run(query, function (err) {
             if (err) {
@@ -40,8 +40,26 @@ exports.insert = (name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPlayer,
     });
 }
 
-exports.addLogo = (id, logo) => {
-    let query = `UPDATE action SET logo = '${logo}' WHERE ID = ${id}`;
+
+exports.update = (id, name, logo, hasPlayer1, hasPlayer2, hasArea) => {
+    let query = `UPDATE action SET `;
+    if (name) {
+        query += `name = '${name}', `;
+    }
+    if (logo) {
+        query += `logo = '${logo}', `;
+    }
+    if (hasPlayer1) {
+        query += `hasPlayer1 = ${hasPlayer1}, `;
+    }
+    if (hasPlayer2) {
+        query += `hasPlayer2 = ${hasPlayer2}, `;
+    }
+    if (hasArea) {
+        query += `hasArea = ${hasArea}, `;
+    }
+    query = query.slice(0, -2);
+    query += ` WHERE ID = ${id}`;
     return new Promise((resolve, reject) => {
         db.run(query, (err) => {
             if (err) {
@@ -53,28 +71,8 @@ exports.addLogo = (id, logo) => {
     });
 }
 
-exports.update = (id, name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPlayer, hasToPlayer) => {
-    let query = `UPDATE action SET `;
-    if (name) {
-        query += `name = '${name}', `;
-    }
-    if (logo) {
-        query += `logo = '${logo}', `;
-    }
-    if (hasDoneTeamSide) {
-        query += `hasDoneTeamSide = ${hasDoneTeamSide}, `;
-    }
-    if (hasAffectedTeamSide) {
-        query += `hasAffectedTeamSide = ${hasAffectedTeamSide}, `;
-    }
-    if (hasByPlayer) {
-        query += `hasByPlayer = ${hasByPlayer}, `;
-    }
-    if (hasToPlayer) {
-        query += `hasToPlayer = ${hasToPlayer}, `;
-    }
-    query = query.slice(0, -2);
-    query += ` WHERE ID = ${id}`;
+exports.delete = (id) => {
+    let query = `DELETE FROM action WHERE ID = ${id}`;
     return new Promise((resolve, reject) => {
         db.run(query, (err) => {
             if (err) {
