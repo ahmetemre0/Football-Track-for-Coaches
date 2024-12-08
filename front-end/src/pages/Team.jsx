@@ -16,9 +16,13 @@ const Team = () => {
         setForm({ ...form, [key]: value });
     }
 
-    const handleCreateTeam = () => {
-        createTeam(form)
-        setIsCreateModalOpen(false);
+    const handleCreateTeam = async () => {
+
+        let createdTeam = await createTeam(form)
+        if (createdTeam) {
+            teams.push(createdTeam);
+            setIsCreateModalOpen(false);
+        }
     }
 
     useEffect(() => {
@@ -44,7 +48,7 @@ const Team = () => {
                     </div>
                 </div>
                 <div className="">
-                    <TeamTable teams={teams}></TeamTable>
+                    <TeamTable teamList={teams}></TeamTable>
                 </div>
                 </>
             )}
