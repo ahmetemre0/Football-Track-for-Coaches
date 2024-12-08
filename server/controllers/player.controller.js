@@ -100,6 +100,13 @@ exports.deletePlayer = async (req, res) => {
             res.status(400).json({ message: 'Player ID is required', success: false });
             return;
         }
+
+        let player = await Player.getByID(req.params.id);
+        if (!player) {
+            res.status(404).json({ message: 'Player not found', success: false });
+            return;
+        }
+
         await Player.delete(req.params.id);
         res.json({ message: 'Player successfully deleted', success: true });
     } catch (error) {
@@ -120,19 +127,45 @@ exports.updatePlayer = [
                 return;
             }
 
+            let player = await Player.getByID(req.params.id);
+            if (!player) {
+                res.status(404).json({ message: 'Player not found', success: false });
+                return;
+            }
+
+            if (req.file) {
+                if (player.photoPath) {
+                    fs.unlinkSync(`./public${player.photoPath}`);
+                }
+            }
+
+            if (!req.body.name && !req.body.teamID && !req.body.number && !req.file) {
+                res.status(400).json({ message: 'Nothing to update', success: false });
+                return;
+            }
+
+            if (!req.body.name) {
+                req.body.name = player.name;
+            }
+            if (!req.body.teamID) {
+                req.body.teamID = player.teamID;
+            }
+            if (!req.body.number) {
+                req.body.number = player.number;
+            }
+
+            if (!req.file) {
+                photoPath = player.photoPath;
+            }
+
             // Update the database
             await Player.update(req.params.id, req.body.name, photoPath, req.body.teamID, req.body.number, req.body.position);
-
+            
+            let updated = await Player.getByID(req.params.id);
             res.json({
                 message: 'Player successfully updated',
                 success: true,
-                player: {
-                    name: req.body.name,
-                    photo: photoPath,
-                    teamID: req.body.teamID,
-                    number: req.body.number,
-                    position: req.body.position,
-                },
+                player: updated,
             });
         } catch (error) {
             console.error(error);
