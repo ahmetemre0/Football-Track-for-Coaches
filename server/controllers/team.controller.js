@@ -106,7 +106,7 @@ exports.updateTeam = [
     async (req, res) => {
         try {
             // Determine the logo path (optional)
-            const logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : null;
+            const logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : path.join('/uploads/logos', 'logo.png');
             
             if (!req.params.id) {
                 res.status(400).json({ message: 'Team ID is required', success: false });
