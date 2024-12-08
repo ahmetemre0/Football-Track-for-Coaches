@@ -44,8 +44,6 @@ exports.createPlayer = [
             // Insert into the database
             const ID = await Player.insert(req.body.name, photoPath, req.body.teamID, req.body.number, req.body.position);
 
-            console.log(ID);
-
             res.json({
                 message: 'Player successfully created',
                 success: true,
