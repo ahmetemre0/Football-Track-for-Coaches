@@ -163,6 +163,7 @@ exports.updateTeam = [
                 message: 'Team successfully updated',
                 success: true,
                 team: {
+                    ID: req.params.id,
                     name: req.body.name,
                     logo: logoPath,
                 },
