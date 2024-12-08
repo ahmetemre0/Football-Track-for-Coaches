@@ -55,31 +55,21 @@ const Team = () => {
 
     return (
         <>
-        
-        <div>
-            {!teams || teams.length === 0  ? (
-                <p>No teams available.</p>
-            ) : (
-                <>
-                <div className="w-full flex justify-end">
-                    <div
-                        onClick={() => setIsCreateModalOpen(true)} 
-                        className="h-12 w-32 min rounded-lg btn bg-green-600 hover:bg-green-700 text-white mb-4" 
-                    >
-                        Add Team
-                    </div>
-                </div>
-                <div className="">
-                    <TeamTable 
-                        teams={teams}
-                        openEditModal={(team) => { setCurrentTeam(team); setIsEditModalOpen(true); }}
-                        openDeleteModal={(team) => { setCurrentTeam(team); setIsDeleteModalOpen(true); }}
-                    >
-
-                    </TeamTable>
-                </div>
-                </>
-            )}
+ 
+        <div className="w-full flex justify-end">
+            <div
+                onClick={() => setIsCreateModalOpen(true)} 
+                className="h-12 w-32 min rounded-lg btn bg-green-600 hover:bg-green-700 text-white mb-4" 
+            >
+                Add Team
+            </div>
+        </div>
+        <div className="">
+            <TeamTable 
+                teams={teams}
+                openEditModal={(team) => { setCurrentTeam(team); setIsEditModalOpen(true); }}
+                openDeleteModal={(team) => { setCurrentTeam(team); setIsDeleteModalOpen(true); }}
+            />
         </div>
 
         <Modal

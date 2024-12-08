@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { getPlayers, createPlayer, updatePlayer, deletePlayer } from "../services/player";
+import { getTeamNames } from "../services/team";
 
 import Modal from "../components/common/Modal";
 import PlayerTable from "../components/player/Table";
@@ -14,6 +15,11 @@ const Team = () => {
     const [players, setPlayers] = useState([]);
 
     const [form, setForm] = useState({});
+    
+    const [teamNames, setTeamNames] = useState([]);
+    const [filters, setFilters] = useState({
+        teamID: 0,
+    });
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -51,35 +57,49 @@ const Team = () => {
         getPlayers()
             .then((data) => {setPlayers(data)})
             .catch((error) => console.error(error));
+
+        getTeamNames()
+            .then((data) => {setTeamNames(data)})
+            .catch((error) => console.error(error));
     }, []);
+
+    const applyFilters = () => {
+        let filteredPlayers = [...players];
+        if (filters.teamID) {
+            filteredPlayers = filteredPlayers.filter((player) => player.teamID === Number(filters.teamID));
+        }
+
+        return filteredPlayers;
+    } 
 
     return (
         <>
-        
-        <div>
-            {!players || players.length === 0  ? (
-                <p>No players available.</p>
-            ) : (
-                <>
-                <div className="w-full flex justify-end">
-                    <div
-                        onClick={() => setIsCreateModalOpen(true)} 
-                        className="h-12 w-32 min rounded-lg btn bg-green-600 hover:bg-green-700 text-white mb-4" 
-                    >
-                        Add Player
-                    </div>
-                </div>
-                <div className="">
-                    <PlayerTable 
-                        players={players}
-                        openEditModal={(player) => {setCurrentPlayer(player); setIsEditModalOpen(true)}}
-                        openDeleteModal={(player) => {setCurrentPlayer(player); setIsDeleteModalOpen(true)}}
-                    >
 
-                    </PlayerTable>
-                </div>
-                </>
-            )}
+        <div className="w-full flex justify-between">
+            <div>
+                <select 
+                    className="select select-bordered w-full max-w-xs"
+                    onChange={(e) => setFilters({ ...filters, teamID: e.target.value })}
+                >
+                    <option value="">Select Team to Filter</option>
+                    {teamNames.map((team) => (
+                        <option key={team.ID} value={team.ID}>{team.name}</option>
+                    ))}
+                </select>
+            </div>
+            <div
+                onClick={() => setIsCreateModalOpen(true)} 
+                className="h-12 w-32 min rounded-lg btn bg-green-600 hover:bg-green-700 text-white mb-4" 
+            >
+                Add Player
+            </div>
+        </div>
+        <div className="">
+            <PlayerTable 
+                players={applyFilters()}
+                openEditModal={(player) => {setCurrentPlayer(player); setIsEditModalOpen(true)}}
+                openDeleteModal={(player) => {setCurrentPlayer(player); setIsDeleteModalOpen(true)}}
+            />
         </div>
 
         <Modal
