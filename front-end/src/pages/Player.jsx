@@ -16,15 +16,13 @@ const Team = () => {
         setForm({ ...form, [key]: value });
     }
 
-    const handleCreatePlayer = () => {
-        try {
-            createPlayer(form)
-        } catch (error) {
-            console.log("Catched error huyyaa")
-            alert("Error creating player");
+    const handleCreatePlayer = async () => {
+        let createdPlayer = await createPlayer(form)
+        
+        if (createdPlayer) {
+            players.push(createdPlayer);
+            setIsCreateModalOpen(false);
         }
-        setIsCreateModalOpen(false);
-        //window.location.reload();
     }
 
     useEffect(() => {
@@ -50,7 +48,7 @@ const Team = () => {
                     </div>
                 </div>
                 <div className="">
-                    <PlayerTable players={players}></PlayerTable>
+                    <PlayerTable playerList={players}></PlayerTable>
                 </div>
                 </>
             )}

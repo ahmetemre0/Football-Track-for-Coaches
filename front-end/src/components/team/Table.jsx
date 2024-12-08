@@ -8,7 +8,8 @@ import DeleteTeamModalBody from "./DeleteModal";
 import EditTeamModalBody from "./EditModal";
 import { API_BASE_URL } from "../../services/common";
 
-const TeamTable = ({ teams }) => {
+const TeamTable = ({ teamList }) => {
+  const [teams, setTeams] = useState(teamList);
   const [currentTeam, setCurrentTeam] = useState(null);
   const [form, setForm] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -24,17 +25,20 @@ const TeamTable = ({ teams }) => {
     setIsDeleteModalOpen(true);
   };
 
-  const deleteCurrentTeam = () => {
-    deleteTeam(currentTeam?.ID);
-    setIsDeleteModalOpen(false);
-    window.location.reload();
+  const deleteCurrentTeam = async () => {
+    let response = await deleteTeam(currentTeam?.ID);
+    if (response.success) {
+      setIsDeleteModalOpen(false);
+      setTeams((teams) => teams.filter((team) => team.ID !== currentTeam.ID));
+    }  
   };
 
-  const editCurrentTeam = () => {
-    console.log(form)
-    updateTeam(currentTeam.ID, form);
-    setIsEditModalOpen(false);
-    window.location.reload();
+  const editCurrentTeam = async () => {
+    let updatedTeam = await updateTeam(currentTeam.ID, form);
+    if (updatedTeam) {
+      setTeams((teams) => teams.map((team) => team.ID === currentTeam.ID ? updatedTeam : team));
+      setIsEditModalOpen(false);
+    }
   };
 
   const handleForm = (key, value) => {

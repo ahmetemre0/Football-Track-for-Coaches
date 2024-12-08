@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 import { deletePlayer, updatePlayer } from "../../services/player";
@@ -8,7 +8,8 @@ import DeletePlayerModalBody from "./DeleteModal";
 import EditPlayerModalBody from "./EditModal";
 import { API_BASE_URL } from "../../services/common";
 
-const PlayerTable = ({ players }) => {
+const PlayerTable = ({ playerList }) => {
+  const [players, setPlayers] = useState(playerList);
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [form, setForm] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -24,25 +25,28 @@ const PlayerTable = ({ players }) => {
     setIsDeleteModalOpen(true);
   };
 
-  const deleteCurrentTeam = () => {
-    deletePlayer(currentPlayer?.ID);
-    setIsDeleteModalOpen(false);
-    //window.location.reload();
+  const deleteCurrentTeam = async () => {
+
+    let response = await deletePlayer(currentPlayer?.ID);
+    if (response.success) {
+      setPlayers((players) => players.filter((player) => player.ID !== currentPlayer.ID));
+      setIsDeleteModalOpen(false);
+    }
   };
 
-  const editCurrentPlayer = () => {
-    updatePlayer(currentPlayer.ID, form);
-    setIsEditModalOpen(false);
-    window.location.reload();
+  const editCurrentPlayer = async () => {
+    let updatedPlayer = await updatePlayer(currentPlayer.ID, form);
+
+    if (updatedPlayer){
+      setPlayers((players) => players.map((player) => player.ID === currentPlayer.ID ? updatedPlayer : player));
+      setIsEditModalOpen(false);
+    }
+    
   };
 
   const handleForm = (key, value) => {
     setForm({ ...form, [key]: value });
   };
-
-  useEffect(() => {
-    console.log('players', players);
-  }, [players]);
 
   return (
     <>
