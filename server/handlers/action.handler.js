@@ -3,39 +3,53 @@ const db = new sqlite3.Database('./db.sqlite');
 
 exports.getByID = (id) => {
     let query = `SELECT * FROM action WHERE ID = ${id}`;
-    db.get(query, (err, row) => {
-        if (err) {
-            console.error(err.message);
-        }
-        return row;
-    });    
+    return new Promise((resolve, reject) => {
+        db.get(query, (err, row) => {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve(row);
+        });
+    });
 }
 
 exports.getAll = () => {
     let query = `SELECT * FROM action`;
-    db.all(query, (err, rows) => {
-        if (err) {
-            console.error(err.message);
-        }
-        return rows;
+    return new Promise((resolve, reject) => {
+        db.all(query, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve(rows);
+        });
     });
 }
 
 exports.insert = (name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPlayer, hasToPlayer) => {
     let query = `INSERT INTO action (name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPlayer, hasToPlayer) VALUES ('${name}', '${logo}', ${hasDoneTeamSide}, ${hasAffectedTeamSide}, ${hasByPlayer}, ${hasToPlayer})`;
-    db.run(query, (err) => {
-        if (err) {
-            console.error(err.message);
-        }
+    return new Promise((resolve, reject) => {
+        db.run(query, function (err) {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve(this.lastID);
+        });
     });
 }
 
 exports.addLogo = (id, logo) => {
     let query = `UPDATE action SET logo = '${logo}' WHERE ID = ${id}`;
-    db.run(query, (err) => {
-        if (err) {
-            console.error(err.message);
-        }
+    return new Promise((resolve, reject) => {
+        db.run(query, (err) => {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve();
+        });
     });
 }
 
@@ -61,9 +75,13 @@ exports.update = (id, name, logo, hasDoneTeamSide, hasAffectedTeamSide, hasByPla
     }
     query = query.slice(0, -2);
     query += ` WHERE ID = ${id}`;
-    db.run(query, (err) => {
-        if (err) {
-            console.error(err.message);
-        }
+    return new Promise((resolve, reject) => {
+        db.run(query, (err) => {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve();
+        });
     });
 }
