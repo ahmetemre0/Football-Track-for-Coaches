@@ -87,39 +87,22 @@ exports.insert = [
                 res.status(400).json({ message: 'Name is required', success: false });
                 return;
             }
-            if (!req.body.hasDoneTeamSide) {
-                req.body.hasDoneTeamSide = false;
-            }
-            if (!req.body.hasAffectedTeamSide) {
-                req.body.hasAffectedTeamSide = false;
-            }
-            if (!req.body.hasByPlayer) {
-                req.body.hasByPlayer = false;
-            }
-            if (!req.body.hasToPlayer) {
-                req.body.hasToPlayer = false;
-            }
-            if (!req.body.hasArea) {
-                req.body.hasArea = false;
-            }
 
-            let logoPath = null;
+            let logo = null;
             if (req.file) {
-                logoPath = req.file.path;
+                logo = req.file.path;
             }
 
-            await Action.insert(req.body.name, req.body.hasDoneTeamSide, req.body.hasAffectedTeamSide, req.body.hasByPlayer, req.body.hasToPlayer, req.body.hasArea, logoPath);
+            await Action.insert(req.body.name, logo, req.body.hasPlayer1, req.body.hasPlayer2, req.body.hasArea);
             res.json({
                 message: 'Action successfully created',
                 success: true,
                 action: {
                     name: req.body.name,
-                    hasDoneTeamSide: req.body.hasDoneTeamSide,
-                    hasAffectedTeamSide: req.body.hasAffectedTeamSide,
-                    hasByPlayer: req.body.hasByPlayer,
-                    hasToPlayer: req.body.hasToPlayer,
+                    hasPlayer1: req.body.hasPlayer1,
+                    hasPlayer2: req.body.hasPlayer2,
                     hasArea: req.body.hasArea,
-                    logo: logoPath,
+                    logo: logo,
                 },
             });
 
@@ -144,12 +127,12 @@ exports.update = [
                 return;
             }
 
-            let logoPath = action.logo;
+            let logo = action.logo;
             if (req.file) {
-                logoPath = req.file.path;
+                logo = req.file.path;
             }
 
-            await Action.update(req.params.id, req.body.name, req.body.hasDoneTeamSide, req.body.hasAffectedTeamSide, req.body.hasByPlayer, req.body.hasToPlayer, req.body.hasArea, logoPath);
+            await Action.update(req.params.id, req.body.name, logo, req.body.hasPlayer1, req.body.hasPlayer2, req.body.hasArea);
             
             let updatedAction = await Action.getByID(req.params.id);
             
