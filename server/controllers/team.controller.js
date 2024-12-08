@@ -38,7 +38,7 @@ exports.createTeam = [
     async (req, res) => {
         try {
             // Determine the logo path (optional)
-            const logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : path.join('/uploads/logos', 'logo.png');
+            let logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : path.join('/uploads/logos', 'logo.png');
 
             if (!req.body.name) {
                 res.status(400).json({ message: 'Name is required', success: false });
@@ -46,12 +46,13 @@ exports.createTeam = [
             }
 
             // Insert into the database
-            await Team.insert(req.body.name, logoPath);
+            const ID = await Team.insert(req.body.name, logoPath);
 
             res.json({
                 message: 'Team successfully created',
                 success: true,
                 team: {
+                    ID: ID,
                     name: req.body.name,
                     logo: logoPath || defaultLogo,
                 },
