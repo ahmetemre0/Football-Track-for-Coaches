@@ -31,18 +31,19 @@ exports.getAll = () => {
 
 
 exports.insert = (name, logo) => {
-    let query = `INSERT INTO team (name, logo) VALUES ('${name}', '${logo}')`;
+    const query = `INSERT INTO team (name, logo) VALUES (?, ?)`;
     return new Promise((resolve, reject) => {
-        db.run(query, (err) => {
+        db.run(query, [name, logo], function (err) {
             if (err) {
                 console.error(err.message);
-                reject(err); // Reject the promise on error
+                reject(err); // Reject the promise with the error
             } else {
-                resolve(); // Resolve the promise
+                resolve(this.lastID); // Resolve the promise with the last inserted row ID
             }
         });
     });
-}
+};
+
 
 exports.delete = (id) => {
     let query = `DELETE FROM team WHERE ID = ${id}`;
