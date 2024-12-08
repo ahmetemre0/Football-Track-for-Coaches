@@ -54,7 +54,7 @@ const PlayerTable = ({ players }) => {
           >
             <figure>
               <img
-                src={`${API_BASE_URL}${player.imagePath}`}
+                src={`${API_BASE_URL}${player.photoPath}`}
                 alt="Player"
                 className="w-96 h-96 object-cover"
               />
