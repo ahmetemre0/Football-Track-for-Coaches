@@ -2,8 +2,8 @@ const teamRouter = require('express').Router();
 const teamController = require('../controllers/team.controller');
 
 teamRouter.get('/', teamController.getTeams);
-teamRouter.get('/:id', teamController.getTeam);
 teamRouter.get('/names', teamController.getNames);
+teamRouter.get('/:id', teamController.getTeam);
 teamRouter.get('/:id/players', teamController.getPlayers);
 teamRouter.get('/:teamid/:matchid/squad', teamController.getSquad);
 teamRouter.get('/:teamid/:matchid/first11', teamController.getFirst11);
