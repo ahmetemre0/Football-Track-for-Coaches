@@ -5,11 +5,11 @@ const ScoreCard = ({ match }) => {
             homeTeamLogo, awayTeamLogo, 
             homeScore, awayScore } = match;
 
+    const played = homeScore !== null && awayScore !== null;
+
     const homeWon = homeScore > awayScore;
     const awayWon = awayScore > homeScore
     const draw = homeScore === awayScore;
-
-    
     
     return (
         <div className="stats shadow-xl">
@@ -25,6 +25,8 @@ const ScoreCard = ({ match }) => {
                     ${homeWon ? 'text-green-700' : ''}
                     ${awayWon ? 'text-red-700' : ''}
                     ${draw ? 'text-yellow-400' : ''}
+                    ${played ? '' : 'text-black'}
+
                     
                     `}>
                     {homeTeamName} 
@@ -33,7 +35,7 @@ const ScoreCard = ({ match }) => {
 
             <div className="stat">
                 <div className="stat-value flex flex-wrap content-center">
-                    {`${homeScore}-${awayScore}`}
+                    {played ? `${homeScore}-${awayScore}`: 'VS'}
                 </div>
             </div>
 
@@ -42,6 +44,7 @@ const ScoreCard = ({ match }) => {
                     ${awayWon ? 'text-green-700' : ''}
                     ${homeWon ? 'text-red-700' : ''}
                     ${draw ? 'text-yellow-400' : ''}
+                    ${played ? '' : 'text-black'}
                     
                     `}>
                     {awayTeamName} 

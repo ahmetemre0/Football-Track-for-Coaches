@@ -10,9 +10,7 @@ const getMatches= async () => {
 };
 
 const createMatch = async (matchData) => {
-    const response = await axios.post(API_URL, matchData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await axios.post(API_URL, matchData);
     return handleResponse(response)?.match;
 };
 
