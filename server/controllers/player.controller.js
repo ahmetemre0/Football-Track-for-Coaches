@@ -121,7 +121,7 @@ exports.updatePlayer = [
     async (req, res) => {
         try {
             // Determine the photo path (optional)
-            const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : path.join('/uploads/photos', 'default.gif');
+            let photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : path.join('/uploads/photos', 'default.gif');
 
             if (!req.params.id) {
                 res.status(400).json({ message: 'Player ID is required', success: false });
