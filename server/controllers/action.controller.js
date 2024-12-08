@@ -148,3 +148,23 @@ exports.update = [
         }
     }
 ];
+
+exports.getAreaActions = async (req, res) => {
+    try {
+        let actions = await Action.getAreaActions();
+        res.json({ actions: actions, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching area actions', success: false });
+    }
+}
+
+exports.getNoAreaActions = async (req, res) => {
+    try {
+        let actions = await Action.getNoAreaActions();
+        res.json({ actions: actions, success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching no area actions', success: false });
+    }
+}
