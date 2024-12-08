@@ -27,7 +27,7 @@ const PlayerTable = ({ players }) => {
   const deleteCurrentTeam = () => {
     deletePlayer(currentPlayer?.ID);
     setIsDeleteModalOpen(false);
-    window.location.reload();
+    //window.location.reload();
   };
 
   const editCurrentPlayer = () => {

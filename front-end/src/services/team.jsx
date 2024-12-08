@@ -8,8 +8,7 @@ const getTeams = async () => {
         const response = await axios.get(API_URL);
         return response.data.teams;
     } catch (error) {
-        console.error('Error fetching teams:', error);
-        throw error;
+        alert("Error getting teams: ", error.message);
     }
 };
 
@@ -18,8 +17,7 @@ const getTeamById = async (id) => {
         const response = await axios.get(`${API_URL}/${id}`);
         return response.team;
     } catch (error) {
-        console.error(`Error fetching team with id ${id}:`, error);
-        throw error;
+        alert("Error getting team: ", error.message);
     }
 };
 
@@ -31,8 +29,7 @@ const createTeam = async (teamData) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error creating team:', error);
-        throw error;
+        alert("Error creating team: ", error.message);
     }
 };
 
@@ -43,8 +40,7 @@ const updateTeam = async (id, teamData) => {
         });
         return response.data;
     } catch (error) {
-        console.error(`Error updating team with id ${id}:`, error);
-        throw error;
+        alert("Error updating team: ", error.message);
     }
 };
 
@@ -53,8 +49,7 @@ const deleteTeam = async (id) => {
         const response = await axios.delete(`${API_URL}/${id}`);
         return response.data;
     } catch (error) {
-        console.error(`Error deleting team with id ${id}:`, error);
-        throw error;
+        alert("Error deleting team: ", error.message);
     }
 };
 
@@ -63,8 +58,7 @@ const getPlayersOfTeam = async (id) => {
         const response = await axios.get(`${API_URL}/${id}/players`);
         return response.data.players;
     } catch (error) {
-        console.error(`Error fetching players of team with id ${id}:`, error);
-        throw error;
+        alert("Error getting players of team: ", error.message);
     }
 }
 
@@ -73,8 +67,7 @@ const getTeamNames = async () => {
         const response = await axios.get(`${API_URL}/names`);
         return response.data.teams;
     } catch (error) {
-        console.error('Error fetching team names:', error);
-        throw error;
+        alert("Error getting team names: ", error.message);
     }
 }
 
