@@ -16,9 +16,9 @@ exports.getAll = () => {
             match.date
         FROM 
             match
-        JOIN 
+        LEFT JOIN 
             team AS homeTeam ON match.homeTeamID = homeTeam.ID
-        JOIN 
+        LEFT JOIN 
             team AS awayTeam ON match.awayTeamID = awayTeam.ID
     `;
     return new Promise((resolve, reject) => {
@@ -33,30 +33,30 @@ exports.getAll = () => {
     });
 };
 
-exports.getByID = () => {
+exports.getByID = (id) => {
+    let query = `
+        SELECT 
+            match.ID AS matchID,
+            match.homeTeamID,
+            homeTeam.name AS homeTeamName,
+            homeTeam.logo AS homeTeamLogo,
+            match.awayTeamID,
+            awayTeam.name AS awayTeamName,
+            awayTeam.logo AS awayTeamLogo,
+            match.homeScore,
+            match.awayScore,
+            match.date
+        FROM 
+            match
+        JOIN 
+            team AS homeTeam ON match.homeTeamID = homeTeam.ID
+        JOIN 
+            team AS awayTeam ON match.awayTeamID = awayTeam.ID
+        WHERE
+            match.ID = ?`;
     return new Promise((resolve, reject) => {
-        const query = `
-            SELECT 
-                match.ID AS matchID,
-                match.homeTeamID,
-                homeTeam.name AS homeTeamName,
-                homeTeam.logo AS homeTeamLogo,
-                match.awayTeamID,
-                awayTeam.name AS awayTeamName,
-                awayTeam.logo AS awayTeamLogo,
-                match.homeScore,
-                match.awayScore,
-                match.date
-            FROM 
-                match
-            JOIN 
-                team AS homeTeam ON match.homeTeamID = homeTeam.ID
-            JOIN 
-                team AS awayTeam ON match.awayTeamID = awayTeam.ID
-            WHERE
-                match.ID = ${id}`;
 
-        db.all(query, (err, rows) => {
+        db.all(query, [id], (err, rows) => {
             if (err) {
                 console.error(err.message);
                 reject(err); 
@@ -71,14 +71,14 @@ exports.insert = (homeTeamID, awayTeamID, homeScore, awayScore) => {
     let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     if (!homeScore) homeScore = 'NULL';
     if (!awayScore) awayScore = 'NULL';
-    let query = `INSERT INTO match (homeTeamID, awayTeamID, homeScore, awayScore, date) VALUES (${homeTeamID}, ${awayTeamID}, ${homeScore}, ${awayScore}, "${date}")`;
+    let query = `INSERT INTO match (homeTeamID, awayTeamID, homeScore, awayScore, date) VALUES (? , ? , ?,?, ?)`;
     return new Promise((resolve, reject) => {
-        db.run(query, (err) => {
+        db.run(query, [homeTeamID, awayTeamID, homeScore, awayScore, date], function (err) {
             if (err) {
                 console.error(err.message);
                 reject(err); 
             } else {
-                resolve(); 
+                resolve(this.lastID); 
             }
         });
     });
@@ -98,7 +98,10 @@ exports.delete = (id) => {
     });
 };
 
-exports.update = (id, homeTeamID, awayTeamID, date, homeScore, awayScore) => {
+exports.update = (id, homeTeamID, awayTeamID, homeScore, awayScore) => {
+    if (!homeScore) homeScore = 'NULL';
+    if (!awayScore) awayScore = 'NULL';
+    date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     let query = `UPDATE match SET `;
     if (homeTeamID) {
         query += `homeTeamID = ${homeTeamID}, `;
