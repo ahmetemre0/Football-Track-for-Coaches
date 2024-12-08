@@ -32,6 +32,7 @@ const CreatePlayerModalBody = (props) => {
                     onChange={(e) => handleForm('teamID', e.target.value)}
                     className="w-full px-3 py-2 border rounded"
                 >
+                    <option value="">Select a team</option>
                     {
                     teamNames.map((team) => (
                         <option key={team.ID} value={team.ID}>{team.name}</option>

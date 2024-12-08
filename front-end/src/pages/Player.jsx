@@ -17,9 +17,14 @@ const Team = () => {
     }
 
     const handleCreatePlayer = () => {
-        createPlayer(form)
+        try {
+            createPlayer(form)
+        } catch (error) {
+            console.log("Catched error huyyaa")
+            alert("Error creating player");
+        }
         setIsCreateModalOpen(false);
-        window.location.reload();
+        //window.location.reload();
     }
 
     useEffect(() => {
