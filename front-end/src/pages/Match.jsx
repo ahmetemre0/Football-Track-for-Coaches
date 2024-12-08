@@ -17,6 +17,10 @@ const Match = () => {
             .catch((error) => console.error(error));
     }, []);
 
+    const handleClick = (match) => {
+        console.log('clicked to ', match);
+    }
+
     const handleForm = (key, value) => {
         setForm({ ...form, [key]: value });
     }
@@ -24,6 +28,7 @@ const Match = () => {
     const handleCreateMatch = async () => {
         let createdMatch = await createMatch(form)
         
+        console.log(createdMatch);
         if (createdMatch) {
             matches.push(createdMatch);
             setIsCreateModalOpen(false);
@@ -42,13 +47,13 @@ const Match = () => {
                 Add Match
             </div>
         </div>
-        <MatchTable matches={matches} />
+
+        <MatchTable onMatchClick={handleClick} matches={matches} />
 
         <Modal
             isOpen={isCreateModalOpen}
             close={() => setIsCreateModalOpen(false)}
             title="Create New Match"
-            size="lg"
         >
             <CreateMatchModalBody
                 handleCancel={() => setIsCreateModalOpen(false)}

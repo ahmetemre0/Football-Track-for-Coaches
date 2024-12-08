@@ -1,6 +1,14 @@
+import { useEffect } from "react";
 import ScoreCard from "./ScoreCard";
 
-const MatchTable = ({ matches }) => {
+const MatchTable = (props) => {
+
+    const { matches, onMatchClick } = props;
+
+    useEffect(() => {
+        console.log(matches);
+    }, [matches]);
+
     return (
         <>
         {!matches || matches.length === 0  ?
@@ -9,7 +17,7 @@ const MatchTable = ({ matches }) => {
         ) : 
         (
         <div className="flex flex-wrap justify-center gap-8">
-            { matches.map(match => <ScoreCard key={match.id} match={match} />) }
+            { matches.map(match => <ScoreCard key={match.matchID} match={match} onClick={onMatchClick}  />) }
         </div>
         )}
         </>
