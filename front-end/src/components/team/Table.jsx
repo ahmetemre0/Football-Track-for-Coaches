@@ -1,53 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
-import { deleteTeam, updateTeam } from "../../services/team";
-
-import Modal from "../common/Modal";
-import DeleteTeamModalBody from "./DeleteModal";
-import EditTeamModalBody from "./EditModal";
 import { API_BASE_URL } from "../../services/common";
 
-const TeamTable = ({ teamList }) => {
-  const [teams, setTeams] = useState(teamList);
-  const [currentTeam, setCurrentTeam] = useState(null);
-  const [form, setForm] = useState({});
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const openEditModal = (team) => {
-    setCurrentTeam(team);
-    setIsEditModalOpen(true);
-  };
-
-  const openDeleteModal = (team) => {
-    setCurrentTeam(team);
-    setIsDeleteModalOpen(true);
-  };
-
-  const deleteCurrentTeam = async () => {
-    let response = await deleteTeam(currentTeam?.ID);
-    if (response.success) {
-      setIsDeleteModalOpen(false);
-      setTeams((teams) => teams.filter((team) => team.ID !== currentTeam.ID));
-    }  
-  };
-
-  const editCurrentTeam = async () => {
-    let updatedTeam = await updateTeam(currentTeam.ID, form);
-    if (updatedTeam) {
-      setTeams((teams) => teams.map((team) => team.ID === currentTeam.ID ? updatedTeam : team));
-      setIsEditModalOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    setTeams(teamList);
-  }, [teamList]);
-
-  const handleForm = (key, value) => {
-    setForm({ ...form, [key]: value });
-  };
+const TeamTable = (props) => {
+  const { teams, openEditModal, openDeleteModal } = props;
 
   return (
     <>
@@ -85,29 +42,7 @@ const TeamTable = ({ teamList }) => {
         ))}
       </div>
 
-      <Modal 
-        isOpen={isDeleteModalOpen}
-        close={() => setIsDeleteModalOpen(false)}
-        title={`Delete ${currentTeam?.name}`}
-      >
-        <DeleteTeamModalBody 
-          handeCancel={() => setIsDeleteModalOpen(false)}
-          handleProceed={deleteCurrentTeam}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={isEditModalOpen}
-        close={() => setIsEditModalOpen(false)}
-        title={`Edit ${currentTeam?.name}`}
-      >
-        <EditTeamModalBody
-          handleCancel={() => setIsEditModalOpen(false)}
-          handleProceed={editCurrentTeam}
-          currentTeam={currentTeam}
-          handleForm={handleForm}
-        />
-      </Modal>
+      
     </>
   );
 };
