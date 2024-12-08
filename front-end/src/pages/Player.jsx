@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { getTeams, createTeam } from "../services/team";
+import { getPlayers, createPlayer } from "../services/player";
 
 import Modal from "../components/common/Modal";
-import TeamTable from "../components/team/Table";
-import CreateTeamModalBody from "../components/team/CreateModal";
+import PlayerTable from "../components/player/Table";
+import CreatePlayerModalBody from "../components/player/CreateModal";
 
 const Team = () => {
-    const [teams, setTeams] = useState([]);
+    const [players, setPlayers] = useState([]);
 
     const [form, setForm] = useState({});
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -16,14 +16,14 @@ const Team = () => {
         setForm({ ...form, [key]: value });
     }
 
-    const handleCreateTeam = () => {
-        createTeam(form)
+    const handleCreatePlayer = () => {
+        createPlayer(form)
         setIsCreateModalOpen(false);
     }
 
     useEffect(() => {
-        getTeams()
-            .then((data) => {setTeams(data)})
+        getPlayers()
+            .then((data) => {setPlayers(data)})
             .catch((error) => console.error(error));
     }, []);
 
@@ -31,8 +31,8 @@ const Team = () => {
         <>
         
         <div>
-            {!teams || teams.length === 0  ? (
-                <p>No teams available.</p>
+            {!players || players.length === 0  ? (
+                <p>No players available.</p>
             ) : (
                 <>
                 <div className="w-full flex justify-end">
@@ -40,11 +40,11 @@ const Team = () => {
                         onClick={() => setIsCreateModalOpen(true)} 
                         className="h-12 w-32 min rounded-lg btn bg-green-600 hover:bg-green-700 text-white mb-4" 
                     >
-                        Add Team
+                        Add Player
                     </div>
                 </div>
                 <div className="">
-                    <TeamTable teams={teams}></TeamTable>
+                    <PlayerTable teams={players}></PlayerTable>
                 </div>
                 </>
             )}
@@ -55,9 +55,9 @@ const Team = () => {
             close={() => setIsCreateModalOpen(false)}
             title="Create New Team"
         >
-            <CreateTeamModalBody
+            <CreatePlayerModalBody
                 handleCancel={() => setIsCreateModalOpen(false)}
-                handleProceed={handleCreateTeam}
+                handleProceed={handleCreatePlayer}
                 handleForm={handleForm}
             />
         </Modal>
