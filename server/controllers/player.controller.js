@@ -44,7 +44,7 @@ exports.createPlayer = [
                 success: true,
                 player: {
                     name: req.body.name,
-                    photo: photoPath,
+                    photoPath: photoPath,
                     teamID: req.body.teamID,
                     number: req.body.number,
                     position: req.body.position,
