@@ -56,7 +56,7 @@ exports.getByID = (id) => {
             match.ID = ?`;
     return new Promise((resolve, reject) => {
 
-        db.all(query, [id], (err, rows) => {
+        db.get(query, [id], (err, rows) => {
             if (err) {
                 console.error(err.message);
                 reject(err); 
@@ -155,7 +155,7 @@ exports.getByTeamID = (teamID) => {
             WHERE
                 match.homeTeamID = ${teamID} OR match.awayTeamID = ${teamID}
         `;
-        db.all(query, (err, rows) => {
+        db.run(query, (err, rows) => {
             if (err) {
                 console.error(err.message);
                 reject(err); 
