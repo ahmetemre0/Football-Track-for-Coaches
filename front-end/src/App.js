@@ -4,6 +4,7 @@ import Footer from './components/common/Footer';
 import Home from './pages/Home';
 import Team from './pages/Team';
 import Player from './pages/Player';
+import Game from './pages/Game';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path='/teams' element={<Team />} />
             <Route path='/players' element={<Player />} />
+            <Route path='/game' element={<Game />} />
           </Routes>
         </main>
         <Footer />
