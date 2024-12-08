@@ -30,11 +30,11 @@ const upload = multer({
 });
 
 exports.createPlayer = [
-    upload.single('photo'), // Expect the photo file in the "photo" field, optional
+    upload.single('photoPath'), // Expect the photo file in the "photo" field, optional
     async (req, res) => {
         try {
             // Determine the photo path (optional)
-            const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : null;
+            const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : path.join('/uploads/photos', 'default.gif');
 
             // Insert into the database
             await Player.insert(req.body.name, photoPath, req.body.teamID, req.body.number, req.body.position);
@@ -44,7 +44,7 @@ exports.createPlayer = [
                 success: true,
                 player: {
                     name: req.body.name,
-                    photo: photoPath || 'No photo provided',
+                    photo: photoPath,
                     teamID: req.body.teamID,
                     number: req.body.number,
                     position: req.body.position,
@@ -95,11 +95,11 @@ exports.deletePlayer = async (req, res) => {
 }
 
 exports.updatePlayer = [
-    upload.single('photo'), // Expect the photo file in the "photo" field, optional
+    upload.single('photoPath'), // Expect the photo file in the "photo" field, optional
     async (req, res) => {
         try {
             // Determine the photo path (optional)
-            const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : null;
+            const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : path.join('/uploads/photos', 'default.gif');
 
             // Update the database
             await Player.update(req.params.id, req.body.name, photoPath, req.body.teamID, req.body.number, req.body.position);
@@ -109,7 +109,7 @@ exports.updatePlayer = [
                 success: true,
                 player: {
                     name: req.body.name,
-                    photo: photoPath || 'No photo provided',
+                    photo: photoPath,
                     teamID: req.body.teamID,
                     number: req.body.number,
                     position: req.body.position,
