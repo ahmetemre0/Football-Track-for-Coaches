@@ -1,6 +1,7 @@
 const Team = require('../handlers/team.handler');
 const Player = require('../handlers/player.handler');
 const Match = require('../handlers/match.handler');
+const Comp = require('../handlers/comp.handler');
 
 const multer = require('multer');
 const path = require('path');
@@ -217,7 +218,7 @@ exports.getFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Team is not in this match', success: false });
             return;
         }
-        let first11 = await Team.getFirst11(req.params.matchid);
+        let first11 = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
         res.json({first11: first11, success: true});
     }
     catch (error) {
@@ -242,7 +243,7 @@ exports.getSquad = async (req, res) => {
             res.status(400).json({ message: 'Team is not in this match', success: false });
             return;
         }
-        let squad = await Team.getSquad(req.params.matchid, req.params.teamid);
+        let squad = await Comp.getSquad(req.params.matchid, req.params.teamid);
         res.json({squad: squad, success: true});
     }
     catch (error) {
@@ -267,7 +268,7 @@ exports.getCurrent11 = async (req, res) => {
             res.status(400).json({ message: 'Team is not in this match', success: false });
             return;
         }
-        let current11 = await Team.getCurrent11(req.params.matchid, req.params.teamid);
+        let current11 = await Comp.getCurrent11(req.params.matchid, req.params.teamid);
         res.json({current11: current11, success: true});
     }
     catch (error) {
