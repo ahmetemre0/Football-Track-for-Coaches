@@ -18,6 +18,10 @@ exports.getMatch = (req, res) => {
             return;
         }
         let match = Match.getByID(req.params.id);
+        if (!match) {
+            res.status(404).json({ message: 'Match not found', success: false });
+            return;
+        }
         res.json({match: match, success: true});
     }
     catch (error) {
@@ -65,6 +69,11 @@ exports.updateMatch = async (req, res) => {
     try {
         if (!req.params.id) {
             res.status(400).json({ message: 'Match ID is required', success: false });
+            return;
+        }
+        let match = await Match.getByID(req.params.id);
+        if (!match) {
+            res.status(404).json({ message: 'Match not found', success: false });
             return;
         }
         await Match.update(req.params.id, req.body.homeTeamID, req.body.awayTeamID, req.body.date, req.body.homeScore, req.body.awayScore);
@@ -127,6 +136,10 @@ exports.getLastMatch = async (req, res) => {
             return;
         }
         let match = await Match.getLastMatch(req.params.id);
+        if (!match) {
+            res.status(404).json({ message: 'No previous match', success: false });
+            return;
+        }
         res.json({match: match, success: true});
     }
     catch (error) {
@@ -142,6 +155,10 @@ exports.getNextMatch = async (req, res) => {
             return;
         }
         let match = await Match.getNextMatch(req.params.id);
+        if (!match) {
+            res.status(404).json({ message: 'No upcoming match', success: false });
+            return;
+        }
         res.json({match: match, success: true});
     }
     catch (error) {

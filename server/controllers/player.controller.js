@@ -65,6 +65,11 @@ exports.getPlayer = async (req, res) => {
         }
 
         let player = await Player.getByID(req.params.id);
+
+        if (!player) {
+            res.status(404).json({ message: 'Player not found', success: false });
+            return;
+        }
         res.json({ player: player, success: true });
     }
     catch (error) {

@@ -77,6 +77,11 @@ exports.getTeam = async (req, res) => {
             return;
         }
         let team = await Team.getByID(req.params.id);
+
+        if (!team) {
+            res.status(404).json({ message: 'Team not found', success: false });
+            return;
+        }
         res.json({team: team, success: true});
     }
     catch (error) {
@@ -90,6 +95,11 @@ exports.deleteTeam = async (req, res) => {
     try{
         if (!req.params.id) {
             res.status(400).json({ message: 'Team ID is required', success: false });
+            return;
+        }
+        let team = await Team.getByID(req.params.id);
+        if (!team) {
+            res.status(404).json({ message: 'Team not found', success: false });
             return;
         }
         await Team.delete(req.params.id);
@@ -114,6 +124,12 @@ exports.updateTeam = [
             }
             // Update the database
             const oldTeam = await Team.getByID(req.params.id);
+
+            if (!oldTeam) {
+                res.status(404).json({ message: 'Team not found', success: false });
+                return;
+            }
+
             await Team.update(req.params.id, req.body.name, logoPath);
 
             if (req.file) {
