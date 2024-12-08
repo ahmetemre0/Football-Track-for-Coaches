@@ -97,7 +97,7 @@ exports.getNames = () => {
                 console.error(err.message);
                 reject(err); // Reject the promise on error
             } else {
-                resolve(rows.map(row => row.name)); // Resolve the promise with the rows
+                resolve(rows); // Resolve the promise with the rows
             }
         });
     });
