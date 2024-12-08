@@ -83,3 +83,29 @@ exports.delete = (id) => {
         });
     });
 }
+
+exports.getAreaActions = () => {
+    let query = `SELECT * FROM action WHERE hasArea = 1`;
+    return new Promise((resolve, reject) => {
+        db.all(query, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve(rows);
+        });
+    });
+}
+
+exports.getNoAreaActions = () => {
+    let query = `SELECT * FROM action WHERE hasArea = 0`;
+    return new Promise((resolve, reject) => {
+        db.all(query, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve(rows);
+        });
+    });
+}
