@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 import { deletePlayer, updatePlayer } from "../../services/player";
@@ -40,6 +40,10 @@ const PlayerTable = ({ players }) => {
     setForm({ ...form, [key]: value });
   };
 
+  useEffect(() => {
+    console.log('players', players);
+  }, [players]);
+
   return (
     <>
       <div className="flex flex-wrap justify-center gap-8">
@@ -56,7 +60,10 @@ const PlayerTable = ({ players }) => {
               />
             </figure>
             <div className="card-body">
-              <h2 className="card-title">{player.name}</h2>
+              <div className="flex">
+                <p className="card-title">{player.name}</p>
+                <p className="font-bold text-end">{player.number}</p>
+              </div>
               <div className="card-actions justify-end">
                 <div
                   className="h-12 w-12 min rounded-lg me-2 btn bg-amber-400 hover:bg-amber-500"

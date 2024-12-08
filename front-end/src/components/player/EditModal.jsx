@@ -10,7 +10,7 @@ const EditPlayerModalBody = (props) => {
         getTeamNames()
             .then((data) => {setTeamNames(data)})
             .catch((error) => console.error(error));
-    });
+    }, []);
 
     return (
         <div className="space-y-4">
@@ -32,10 +32,11 @@ const EditPlayerModalBody = (props) => {
                     id='teamID'
                     onChange={(e) => handleForm('teamID', e.target.value)}
                     className="w-full px-3 py-2 border rounded"
+                    value={currentPlayer?.teamID}
                 >
                     {
                     teamNames.map((team) => (
-                        <option selected={team.id === currentPlayer.teamID} key={team.id} value={team.id}>{team.name}</option>
+                        <option key={team.ID} value={team.ID}>{team.name}</option>
                     ))
                     }
                 </select>

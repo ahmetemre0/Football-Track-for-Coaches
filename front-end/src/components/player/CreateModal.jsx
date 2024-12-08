@@ -10,7 +10,7 @@ const CreatePlayerModalBody = (props) => {
         getTeamNames()
             .then((data) => {setTeamNames(data)})
             .catch((error) => console.error(error));
-    });
+    }, []);
 
     return (
         <div className="space-y-4">
@@ -34,7 +34,7 @@ const CreatePlayerModalBody = (props) => {
                 >
                     {
                     teamNames.map((team) => (
-                        <option key={team.id} value={team.id}>{team.name}</option>
+                        <option key={team.ID} value={team.ID}>{team.name}</option>
                     ))
                     }
                 </select>
