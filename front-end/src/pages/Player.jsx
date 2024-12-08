@@ -19,6 +19,7 @@ const Team = () => {
     const handleCreatePlayer = async () => {
         let createdPlayer = await createPlayer(form)
         
+        console.log(createdPlayer);
         if (createdPlayer) {
             players.push(createdPlayer);
             setIsCreateModalOpen(false);

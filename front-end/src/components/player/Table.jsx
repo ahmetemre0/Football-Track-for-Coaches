@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 import { deletePlayer, updatePlayer } from "../../services/player";
@@ -43,6 +43,10 @@ const PlayerTable = ({ playerList }) => {
     }
     
   };
+
+  useEffect(() => {
+    setPlayers(playerList);
+  }, [playerList]);
 
   const handleForm = (key, value) => {
     setForm({ ...form, [key]: value });

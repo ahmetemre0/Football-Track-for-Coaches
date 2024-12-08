@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
 import { deleteTeam, updateTeam } from "../../services/team";
@@ -40,6 +40,10 @@ const TeamTable = ({ teamList }) => {
       setIsEditModalOpen(false);
     }
   };
+
+  useEffect(() => {
+    setTeams(teamList);
+  }, [teamList]);
 
   const handleForm = (key, value) => {
     setForm({ ...form, [key]: value });
