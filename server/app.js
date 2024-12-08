@@ -37,9 +37,6 @@ app.use('/match', matchRouter);
 const playerRouter = require('./routers/player.router');
 app.use('/player', playerRouter);
 
-const areaRouter = require('./routers/area.router');
-app.use('/area', areaRouter);
-
 const actionRouter = require('./routers/action.router');
 app.use('/action', actionRouter);
 
