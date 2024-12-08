@@ -54,16 +54,13 @@ exports.createMatch = async (req, res) => {
             res.status(400).json({ message: 'Away Team is required', success: false });
             return;
         }
-        await Match.insert(req.body.homeTeamID, req.body.awayTeamID, req.body.homeScore, req.body.awayScore);
+        let newMatch = await Match.insert(req.body.homeTeamID, req.body.awayTeamID, req.body.homeScore, req.body.awayScore);
+        console.log(newMatch);
+        const match = await Match.getByID(newMatch);
         res.json({
             message: 'Match successfully created',
             success: true,
-            match: {
-                homeTeamID: req.body.homeTeamID,
-                awayTeamID: req.body.awayTeamID,
-                homeScore: req.body.homeScore,
-                awayScore: req.body.awayScore,
-            },
+            match: match
         });
     }
     catch (error) {
@@ -83,7 +80,7 @@ exports.updateMatch = async (req, res) => {
             res.status(404).json({ message: 'Match not found', success: false });
             return;
         }
-        await Match.update(req.params.id, req.body.homeTeamID, req.body.awayTeamID, req.body.date, req.body.homeScore, req.body.awayScore);
+        await Match.update(req.params.id, req.body.homeTeamID, req.body.awayTeamID, req.body.homeScore, req.body.awayScore);
         res.json({ message: 'Match successfully updated', success: true });
     } catch (error) {
         console.error(error);
@@ -97,7 +94,7 @@ exports.getMatchesByTeam = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let matches = await Match.getByTeamID(req.params.id);
+        let matches = await Match.getByTeamID(req.params.teamid);
         res.json({matches: matches, success: true});
     }
     catch (error) {
@@ -112,7 +109,7 @@ exports.getPlayedMatches = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let matches = await Match.getPlayedMatches(req.params.id);
+        let matches = await Match.getPlayedMatches(req.params.teamid);
         res.json({matches: matches, success: true});
     }
     catch (error) {
@@ -127,7 +124,7 @@ exports.getUpcomingMatches = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let matches = await Match.getUpcomingMatches(req.params.id);
+        let matches = await Match.getUpcomingMatches(req.params.teamid);
         res.json({matches: matches, success: true});
     }
     catch (error) {
@@ -142,7 +139,7 @@ exports.getLastMatch = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let match = await Match.getLastMatch(req.params.id);
+        let match = await Match.getLastMatch(req.params.teamid);
         if (!match) {
             res.status(404).json({ message: 'No previous match', success: false });
             return;
@@ -161,7 +158,7 @@ exports.getNextMatch = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let match = await Match.getNextMatch(req.params.id);
+        let match = await Match.getNextMatch(req.params.teamid);
         if (!match) {
             res.status(404).json({ message: 'No upcoming match', success: false });
             return;
