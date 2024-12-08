@@ -1,8 +1,8 @@
 const Match = require('../handlers/match.handler');
 
-exports.getMatches = (req, res) => {
+exports.getMatches = async (req, res) => {
     try {
-        let matches = Match.getAll();
+        let matches = await Match.getAll();
         res.json({matches: matches, success: true});
     }
     catch (error) {
@@ -11,13 +11,13 @@ exports.getMatches = (req, res) => {
     }
 }
 
-exports.getMatch = (req, res) => {
+exports.getMatch = async (req, res) => {
     try {
         if (!req.params.id) {
             res.status(400).json({ message: 'Match ID is required', success: false });
             return;
         }
-        let match = Match.getByID(req.params.id);
+        let match = await Match.getByID(req.params.id);
         if (!match) {
             res.status(404).json({ message: 'Match not found', success: false });
             return;

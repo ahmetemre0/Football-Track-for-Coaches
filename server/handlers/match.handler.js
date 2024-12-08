@@ -2,26 +2,26 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db.sqlite');
 
 exports.getAll = () => {
+    let query = `
+        SELECT 
+            match.ID AS matchID,
+            match.homeTeamID,
+            homeTeam.name AS homeTeamName,
+            homeTeam.logo AS homeTeamLogo,
+            match.awayTeamID,
+            awayTeam.name AS awayTeamName,
+            awayTeam.logo AS awayTeamLogo,
+            match.homeScore,
+            match.awayScore,
+            match.date
+        FROM 
+            match
+        JOIN 
+            team AS homeTeam ON match.homeTeamID = homeTeam.ID
+        JOIN 
+            team AS awayTeam ON match.awayTeamID = awayTeam.ID
+    `;
     return new Promise((resolve, reject) => {
-        const query = `
-            SELECT 
-                match.ID AS matchID,
-                match.homeTeamID,
-                homeTeam.name AS homeTeamName,
-                homeTeam.logo AS homeTeamLogo,
-                match.awayTeamID,
-                awayTeam.name AS awayTeamName,
-                awayTeam.logo AS awayTeamLogo,
-                match.homeScore,
-                match.awayScore,
-                match.date
-            FROM 
-                match
-            JOIN 
-                team AS homeTeam ON match.homeTeamID = homeTeam.ID
-            JOIN 
-                team AS awayTeam ON match.awayTeamID = awayTeam.ID
-        `;
         db.all(query, (err, rows) => {
             if (err) {
                 console.error(err.message);

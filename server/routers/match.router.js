@@ -2,12 +2,11 @@ const matchRouter = require('express').Router();
 const matchController = require('../controllers/match.controller');
 
 matchRouter.get('/', matchController.getMatches);
-matchRouter.get('/:id', matchController.getMatch);
+matchRouter.get('/:teamid', matchController.getMatchesByTeam);
 matchRouter.get('/:teamid/played', matchController.getPlayedMatches);
 matchRouter.get('/:teamid/upcoming', matchController.getUpcomingMatches);
 matchRouter.get('/:teamid/last', matchController.getLastMatch);
 matchRouter.get('/:teamid/next', matchController.getNextMatch);
-matchRouter.get('/:teamid', matchController.getMatchesByTeam);
 matchRouter.get('/:teamid/:opponentid', matchController.getMatchesByTeams);
 
 matchRouter.post('/', matchController.createMatch);
