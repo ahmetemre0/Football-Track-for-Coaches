@@ -40,6 +40,11 @@ exports.createTeam = [
             // Determine the logo path (optional)
             const logoPath = req.file ? path.join('/uploads/logos', req.file.filename) : path.join('/uploads/logos', 'logo.png');
 
+            if (!req.body.name) {
+                res.status(400).json({ message: 'Name is required', success: false });
+                return;
+            }
+
             // Insert into the database
             await Team.insert(req.body.name, logoPath);
 
