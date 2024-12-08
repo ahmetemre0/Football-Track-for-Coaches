@@ -35,6 +35,11 @@ exports.createPlayer = [
         try {
             // Determine the photo path (optional)
             const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : path.join('/uploads/photos', 'default.gif');
+            
+            if (!req.body.name || !req.body.teamID || !req.body.number) {
+                res.status(400).json({ message: 'Name, teamID, and number are required', success: false });
+                return;
+            }
 
             // Insert into the database
             await Player.insert(req.body.name, photoPath, req.body.teamID, req.body.number, req.body.position);
