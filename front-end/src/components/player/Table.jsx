@@ -7,20 +7,26 @@ const PlayerTable = (props) => {
   const { players, openEditModal, openDeleteModal } = props;
 
   return (
+      <>
+      {!players || players.length === 0  ?
+      (
+          <p>No players available.</p>
+      ) : 
+      (
       <div className="flex flex-wrap justify-center gap-8">
         {players.map((player) => (
           <div
             key={player.ID}
-            className="card card-compact bg-base-200 w-96 shadow-xl"
+            className="card card-compact bg-base-200 w-64 shadow-xl"
           >
             <figure>
               <img
                 src={`${API_BASE_URL}${player.photoPath}`}
                 alt="Player"
-                className="w-96 h-96 object-cover"
+                className="w-64 h-64 object-cover"
               />
             </figure>
-            <div className="card-body">
+            <div className="card-body flex justify-between">
               <div className="flex">
                 <p className="card-title">{player.name}</p>
                 <p className="font-bold text-end">{player.number}</p>
@@ -43,6 +49,8 @@ const PlayerTable = (props) => {
           </div>
         ))}
       </div>
+    )}
+      </>
   );
 };
 

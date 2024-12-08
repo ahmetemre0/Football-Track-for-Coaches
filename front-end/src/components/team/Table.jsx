@@ -8,6 +8,10 @@ const TeamTable = (props) => {
 
   return (
     <>
+    {!teams || teams.length === 0  ?
+    (
+        <p>No teams available.</p>
+    ) : (
       <div className="flex flex-wrap justify-center gap-8">
         {teams.map((team) => (
           <div
@@ -41,6 +45,7 @@ const TeamTable = (props) => {
           </div>
         ))}
       </div>
+    )}
 
       
     </>
