@@ -31,7 +31,11 @@ const historyTable = {
         'type': 'INTEGER',
         'notNull': false
     },
-    'actionAreaID': {
+    'actionPointX': {
+        'type': 'INTEGER',
+        'notNull': false
+    },
+    'actionPointY': {
         'type': 'INTEGER',
         'notNull': false
     }
