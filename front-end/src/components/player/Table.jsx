@@ -1,59 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 
-import { deletePlayer, updatePlayer } from "../../services/player";
-
-import Modal from "../common/Modal";
-import DeletePlayerModalBody from "./DeleteModal";
-import EditPlayerModalBody from "./EditModal";
 import { API_BASE_URL } from "../../services/common";
 
-const PlayerTable = ({ playerList }) => {
-  const [players, setPlayers] = useState(playerList);
-  const [currentPlayer, setCurrentPlayer] = useState(null);
-  const [form, setForm] = useState({});
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const openEditModal = (player) => {
-    setCurrentPlayer(player);
-    setIsEditModalOpen(true);
-  };
-
-  const openDeleteModal = (player) => {
-    setCurrentPlayer(player);
-    setIsDeleteModalOpen(true);
-  };
-
-  const deleteCurrentTeam = async () => {
-
-    let response = await deletePlayer(currentPlayer?.ID);
-    if (response.success) {
-      setPlayers((players) => players.filter((player) => player.ID !== currentPlayer.ID));
-      setIsDeleteModalOpen(false);
-    }
-  };
-
-  const editCurrentPlayer = async () => {
-    let updatedPlayer = await updatePlayer(currentPlayer.ID, form);
-
-    if (updatedPlayer){
-      setPlayers((players) => players.map((player) => player.ID === currentPlayer.ID ? updatedPlayer : player));
-      setIsEditModalOpen(false);
-    }
-    
-  };
-
-  useEffect(() => {
-    setPlayers(playerList);
-  }, [playerList]);
-
-  const handleForm = (key, value) => {
-    setForm({ ...form, [key]: value });
-  };
+const PlayerTable = (props) => {
+  const { players, openEditModal, openDeleteModal } = props;
 
   return (
-    <>
       <div className="flex flex-wrap justify-center gap-8">
         {players.map((player) => (
           <div
@@ -90,31 +43,6 @@ const PlayerTable = ({ playerList }) => {
           </div>
         ))}
       </div>
-
-      <Modal 
-        isOpen={isDeleteModalOpen}
-        close={() => setIsDeleteModalOpen(false)}
-        title={`Delete ${currentPlayer?.name}`}
-      >
-        <DeletePlayerModalBody 
-          handeCancel={() => setIsDeleteModalOpen(false)}
-          handleProceed={deleteCurrentTeam}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={isEditModalOpen}
-        close={() => setIsEditModalOpen(false)}
-        title={`Edit ${currentPlayer?.name}`}
-      >
-        <EditPlayerModalBody
-          handleCancel={() => setIsEditModalOpen(false)}
-          handleProceed={editCurrentPlayer}
-          currentPlayer={currentPlayer}
-          handleForm={handleForm}
-        />
-      </Modal>
-    </>
   );
 };
 
