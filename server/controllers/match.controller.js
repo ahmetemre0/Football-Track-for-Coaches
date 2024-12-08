@@ -46,6 +46,18 @@ exports.deleteMatch = async (req, res) => {
 
 exports.createMatch = async (req, res) => {
     try {
+        if (!req.body.homeTeamID) {
+            res.status(400).json({ message: 'Home Team ID is required', success: false });
+            return;
+        }
+        if (!req.body.awayTeamID) {
+            res.status(400).json({ message: 'Away Team ID is required', success: false });
+            return;
+        }
+        if (!req.body.date) {
+            res.status(400).json({ message: 'Date is required', success: false });
+            return;
+        }
         await Match.insert(req.body.homeTeamID, req.body.awayTeamID, req.body.date, req.body.homeScore, req.body.awayScore);
         res.json({
             message: 'Match successfully created',
