@@ -337,3 +337,33 @@ exports.getByTeams = (homeTeamID, awayTeamID) => {
         });
     });
 }
+
+exports.getTeams = (matchID) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                homeTeamID,
+                homeTeam.name AS homeTeamName,
+                homeTeam.logo AS homeTeamLogo,
+                awayTeamID,
+                awayTeam.name AS awayTeamName,
+                awayTeam.logo AS awayTeamLogo
+            FROM 
+                match
+            JOIN 
+                team AS homeTeam ON match.homeTeamID = homeTeam.ID
+            JOIN 
+                team AS awayTeam ON match.awayTeamID = awayTeam.ID
+            WHERE
+                match.ID = ${matchID}
+        `;
+        db.get(query, (err, row) => {
+            if (err) {
+                console.error(err.message);
+                reject(err); 
+            } else {
+                resolve(row); 
+            }
+        });
+    });
+}
