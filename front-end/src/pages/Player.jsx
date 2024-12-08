@@ -19,6 +19,7 @@ const Team = () => {
     const handleCreatePlayer = () => {
         createPlayer(form)
         setIsCreateModalOpen(false);
+        window.location.reload();
     }
 
     useEffect(() => {
