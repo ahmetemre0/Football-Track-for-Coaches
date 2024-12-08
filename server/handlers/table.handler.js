@@ -3,7 +3,6 @@ const actionTable = require('../models/action.model');
 const teamTable = require('../models/team.model');
 const matchTable = require('../models/match.model');
 const playerTable = require('../models/player.model');
-const areaTable = require('../models/area.model');
 const compTable = require('../models/comp.model');
 
 const sqlite3 = require('sqlite3').verbose();
@@ -34,7 +33,6 @@ const createTable = () => {
         db.run(getCreatorQuery('team', teamTable));
         db.run(getCreatorQuery('match', matchTable));
         db.run(getCreatorQuery('player', playerTable));
-        db.run(getCreatorQuery('area', areaTable));
         db.run(getCreatorQuery('comp', compTable));
     });
 }
