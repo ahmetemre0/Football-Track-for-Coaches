@@ -5,7 +5,7 @@ playerRouter.get('/', playerController.getPlayers);
 playerRouter.get('/:id', playerController.getPlayer);
 
 playerRouter.post('/', playerController.createPlayer);
-playerRouter.delete('/', playerController.deletePlayer);
-playerRouter.put('/', playerController.updatePlayer);
+playerRouter.delete('/:id', playerController.deletePlayer);
+playerRouter.put('/:id', playerController.updatePlayer);
 
 module.exports = playerRouter;

@@ -86,6 +86,10 @@ exports.getPlayers = async (req, res) => {
 
 exports.deletePlayer = async (req, res) => {
     try {
+        if (!req.params.id) {
+            res.status(400).json({ message: 'Player ID is required', success: false });
+            return;
+        }
         await Player.delete(req.params.id);
         res.json({ message: 'Player successfully deleted', success: true });
     } catch (error) {
@@ -100,6 +104,11 @@ exports.updatePlayer = [
         try {
             // Determine the photo path (optional)
             const photoPath = req.file ? path.join('/uploads/photos', req.file.filename) : path.join('/uploads/photos', 'default.gif');
+
+            if (!req.params.id) {
+                res.status(400).json({ message: 'Player ID is required', success: false });
+                return;
+            }
 
             // Update the database
             await Player.update(req.params.id, req.body.name, photoPath, req.body.teamID, req.body.number, req.body.position);
