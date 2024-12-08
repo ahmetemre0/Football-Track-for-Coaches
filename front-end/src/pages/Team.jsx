@@ -48,7 +48,7 @@ const Team = () => {
                     </div>
                 </div>
                 <div className="">
-                    <TeamTable teams={teams}></TeamTable>
+                    <TeamTable teamList={teams}></TeamTable>
                 </div>
                 </>
             )}
