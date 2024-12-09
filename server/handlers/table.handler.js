@@ -37,7 +37,7 @@ const createTable = () => {
     });
 }
 
-const dropTable = (db) => {
+const dropTables = (db) => {
     db.serialize(() => {
         db.run('DROP TABLE IF EXISTS history');
         db.run('DROP TABLE IF EXISTS action');
@@ -47,6 +47,10 @@ const dropTable = (db) => {
         db.run('DROP TABLE IF EXISTS area');
         db.run('DROP TABLE IF EXISTS comp');
     });
+}
+
+const dropTable = (name) => {
+    db.run(`DROP TABLE IF EXISTS ${name}`);
 }
 
 module.exports = { createTable, dropTable };
