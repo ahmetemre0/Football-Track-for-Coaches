@@ -1,4 +1,13 @@
 const historyController = require('../controllers/history.controller');
-const router = require('express').Router();
+const historyRouter = require('express').Router();
 
-module.exports = router;
+historyRouter.get('/', historyController.getAll);
+historyRouter.get('/:matchid', historyController.getByMatchID);
+
+historyRouter.post('/:matchid', historyController.createHistory);
+
+historyRouter.put('/:id', historyController.updateHistory);
+
+historyRouter.delete('/:id', historyController.deleteHistory);
+
+module.exports = historyRouter;
