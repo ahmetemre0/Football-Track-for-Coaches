@@ -98,3 +98,30 @@ exports.getCurrent11 = (teamID, matchID) => {
         });
     });
 }
+
+exports.insertMatch = async (matchID, homeTeamID, awayTeamID, homeTeamSquad, awayTeamSquad, homeTeamFirstEleven, awayTeamFirstEleven) => {
+    for (let playerID of homeTeamSquad) {
+        let isFirstEleven = homeTeamFirstEleven.includes(playerID) ? 1 : 0;
+        let inMatch = isFirstEleven;
+        await this.insert(homeTeamID, matchID, playerID, isFirstEleven, inMatch);
+    }
+    for (let playerID of awayTeamSquad) {
+        let isFirstEleven = awayTeamFirstEleven.includes(playerID) ? 1 : 0;
+        let inMatch = isFirstEleven;
+        await this.insert(awayTeamID, matchID, playerID, isFirstEleven, inMatch);
+    }
+}
+
+exports.updateMatch = async (matchID, homeTeamID, awayTeamID, homeTeamSquad, awayTeamSquad, homeTeamFirstEleven, awayTeamFirstEleven) => {
+    let query = `DELETE FROM comp WHERE matchID = ${matchID}`;
+    return new Promise((resolve, reject) => {
+        db.run(query, async function (err) {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            await this.insertMatch(matchID, homeTeamID, awayTeamID, homeTeamSquad, awayTeamSquad, homeTeamFirstEleven, awayTeamFirstEleven);
+            resolve();
+        });
+    });
+}
