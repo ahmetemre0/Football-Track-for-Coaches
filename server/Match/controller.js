@@ -55,6 +55,23 @@ exports.createMatch = async (req, res) => {
             res.status(400).json({ message: 'Away Team is required', success: false });
             return;
         }
+        if (!req.body.homeTeamSquad) {
+            res.status(400).json({ message: 'Home Team Squad is required', success: false });
+            return;
+        }
+        if (!req.body.awayTeamSquad) {
+            res.status(400).json({ message: 'Away Team Squad is required', success: false });
+            return;
+        }
+        // check if squad lists are iterable
+        if (!Array.isArray(req.body.homeTeamSquad)) {
+            res.status(400).json({ message: 'Home Team Squad must contain a list of players', success: false });
+            return;
+        }
+        if (!Array.isArray(req.body.awayTeamSquad)) {
+            res.status(400).json({ message: 'Away Team Squad must contain a list of players', success: false });
+            return;
+        }
         let newMatchID = await Match.insert(req.body.homeTeamID, req.body.awayTeamID);
         const match = await Match.getByID(newMatchID);
 
