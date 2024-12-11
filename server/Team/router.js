@@ -10,6 +10,7 @@ teamRouter.get('/:teamid/:matchid/first11', teamController.getFirst11);
 teamRouter.get('/:teamid/:matchid/current11', teamController.getCurrent11);
 
 teamRouter.post('/', teamController.createTeam);
+teamRouter.post('/:teamid/:matchid/first11', teamController.createFirst11);
 
 teamRouter.put('/:id', teamController.updateTeam);
 
