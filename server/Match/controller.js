@@ -55,10 +55,10 @@ exports.createMatch = async (req, res) => {
             res.status(400).json({ message: 'Away Team is required', success: false });
             return;
         }
-        let newMatchID = await Match.insert(req.body.homeTeamID, req.body.awayTeamID, req.body.homeScore, req.body.awayScore);
+        let newMatchID = await Match.insert(req.body.homeTeamID, req.body.awayTeamID);
         const match = await Match.getByID(newMatchID);
 
-        await Comp.insertMatch(newMatchID, req.body.homeTeamID, req.body.awayTeamID, req.body.homeTeamSquad, req.body.awayTeamSquad, req.body.homeTeamFirstEleven, req.body.awayTeamFirstEleven);
+        await Comp.insertMatch(newMatchID, req.body.homeTeamID, req.body.awayTeamID, req.body.homeTeamSquad, req.body.awayTeamSquad);
 
         res.json({
             message: 'Match successfully created',
@@ -85,7 +85,7 @@ exports.updateMatch = async (req, res) => {
         }
         await Match.update(req.params.id, req.body.homeTeamID, req.body.awayTeamID, req.body.homeScore, req.body.awayScore);
 
-        await Comp.updateMatch(req.params.id, req.body.homeTeamID, req.body.awayTeamID, req.body.homeTeamSquad, req.body.awayTeamSquad, req.body.homeTeamFirstEleven, req.body.awayTeamFirstEleven);
+        await Comp.updateMatch(req.params.id, req.body.homeTeamID, req.body.awayTeamID, req.body.homeTeamSquad, req.body.awayTeamSquad);
 
         res.json({ message: 'Match successfully updated', success: true });
     } catch (error) {
