@@ -40,7 +40,7 @@ const Match = () => {
         //console.log('clicked to ', match);
     }
 
-    const handleForm = (key, value) => {
+    const handleForm = async (key, value) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     }
 

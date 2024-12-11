@@ -38,10 +38,24 @@ const CreateMatchModalBody = (props) => {
             .catch((error) => console.error(error));
     }, [awayTeamId]);
 
+    useEffect(() => {
+        handleForm('homeTeamSquad', selectedHomePlayers);
+    }, [selectedHomePlayers]);
+
+    useEffect(() => {
+        handleForm('awayTeamSquad', selectedAwayPlayers);
+    }, [selectedAwayPlayers]);
+
     const handleTeamChange = (e, formKey) => {
         let selectedTeam = e.target.value;
-        if (formKey === 'homeTeamID') setHomeTeamId(selectedTeam);
-        else setAwayTeamId(selectedTeam);
+        if (formKey === 'homeTeamID') {
+            setHomeTeamId(selectedTeam);
+            setSelectedHomePlayers([]);
+        }
+        else {
+            setAwayTeamId(selectedTeam);
+            setSelectedAwayPlayers([]);
+        }
 
         handleForm(formKey, selectedTeam);
     }
@@ -62,14 +76,7 @@ const CreateMatchModalBody = (props) => {
         }
     }
 
-    const handleProceedChild = async () => {
-        console.log("Selected home players: ", selectedHomePlayers);
-        console.log("Selected away players: ", selectedAwayPlayers);
-        
-        handleForm('homeTeamSquad', selectedHomePlayers);
-        handleForm('awayTeamSquad', selectedAwayPlayers);
-        handleProceed();
-    }
+
 
     return (
         <>
@@ -203,7 +210,7 @@ const CreateMatchModalBody = (props) => {
             <button onClick={handleCancel} className="btn btn-ghost border-slate-700 join-item">
                 Cancel
             </button>
-            <button onClick={handleProceedChild} disabled={selectedAwayPlayers.length !== 1 || selectedHomePlayers.length !== 1} className="btn bg-green-600 hover:bg-green-700 border-slate-700 text-white join-item">
+            <button onClick={handleProceed} disabled={selectedAwayPlayers.length !== 1 || selectedHomePlayers.length !== 1} className="btn bg-green-600 hover:bg-green-700 border-slate-700 text-white join-item">
                 Create
             </button>
         </div>
