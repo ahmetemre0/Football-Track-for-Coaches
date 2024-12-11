@@ -1,9 +1,9 @@
-const historyTable = require('../models/history.model');
-const actionTable = require('../models/action.model');
-const teamTable = require('../models/team.model');
-const matchTable = require('../models/match.model');
-const playerTable = require('../models/player.model');
-const compTable = require('../models/comp.model');
+const historyTable = require('../History/model');
+const actionTable = require('../Action/model');
+const teamTable = require('../Team/model');
+const matchTable = require('../Match/model');
+const playerTable = require('../Player/model');
+const compTable = require('../Comp/model');
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db.sqlite');

@@ -1,4 +1,4 @@
-const Player = require('../handlers/player.handler');
+const Player = require('./handler');
 
 const multer = require('multer');
 const path = require('path');

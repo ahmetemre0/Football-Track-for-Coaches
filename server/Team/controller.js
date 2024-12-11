@@ -1,7 +1,7 @@
-const Team = require('../handlers/team.handler');
-const Player = require('../handlers/player.handler');
-const Match = require('../handlers/match.handler');
-const Comp = require('../handlers/comp.handler');
+const Team = require('./handler');
+const Player = require('../Player/handler');
+const Match = require('../Match/handler');
+const Comp = require('../Comp/handler');
 
 const multer = require('multer');
 const path = require('path');

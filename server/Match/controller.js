@@ -1,4 +1,4 @@
-const Match = require('../handlers/match.handler');
+const Match = require('./handler');
 
 exports.getMatches = async (req, res) => {
     try {

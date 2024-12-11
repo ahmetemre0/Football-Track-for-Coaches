@@ -1,4 +1,4 @@
-const Comp = require('../handlers/comp.handler');
+const Comp = require('./handler');
 
 exports.getAll = async (req, res) => {
     try {

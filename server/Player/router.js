@@ -1,4 +1,4 @@
-const playerController = require('../controllers/player.controller');
+const playerController = require('./controller');
 const playerRouter = require('express').Router();
 
 playerRouter.get('/', playerController.getPlayers);

@@ -373,3 +373,25 @@ exports.getTeams = (matchID) => {
         });
     });
 }
+
+exports.updateScore = (matchID, teamID) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE 
+                match
+            SET 
+                homeScore = (CASE WHEN homeTeamID = ${teamID} THEN homeScore + 1 ELSE homeScore END),
+                awayScore = (CASE WHEN awayTeamID = ${teamID} THEN awayScore + 1 ELSE awayScore END)
+            WHERE
+                ID = ${matchID}
+        `;
+        db.run(query, (err) => {
+            if (err) {
+                console.error(err.message);
+                reject(err); 
+            } else {
+                resolve(); 
+            }
+        });
+    });
+}

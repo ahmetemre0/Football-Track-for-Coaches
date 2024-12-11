@@ -1,4 +1,4 @@
-const actionController = require('../controllers/action.controller');
+const actionController = require('./controller');
 const router = require('express').Router();
 
 router.get('/', actionController.getAll);

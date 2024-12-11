@@ -1,9 +1,9 @@
-const Action = require('../handlers/action.handler');
-const History = require('../handlers/history.handler');
-const Team = require('../handlers/team.handler');
-const Match = require('../handlers/match.handler');
-const Player = require('../handlers/player.handler');
-const { actionTeamID } = require('../models/history.model');
+const Action = require('../Action/handler');
+const History = require('./handler');
+const Team = require('../Team/handler');
+const Match = require('../Match/handler');
+const Player = require('../Player/handler');
+const Comp = require('../Comp/handler');
 
 exports.getAll = async (req, res) => {
     try {
@@ -109,6 +109,15 @@ exports.createHistory = async (req, res) => {
             actionPointY = req.body.actionPointY;
         }
         let ID = await History.insert(req.params.matchid, req.body.actionTypeID, team, player1, player2, req.body.minutes, req.body.seconds, actionPointX, actionPointY);
+        
+        if (req.body.actionTypeID == 2) {
+            await Match.updateScore(req.params.matchid, req.body.actionTeamID);
+        }
+
+        if (req.body.actionTypeID == 13) {
+            await Comp.substitute(req.params.matchid, req.body.actionTeamID, req.body.actionPlayer1ID, req.body.actionPlayer2ID);
+        }
+        
         let history = await History.getByID(ID);
         res.json({
             message: 'History successfully created',

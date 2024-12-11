@@ -1,5 +1,5 @@
 const matchRouter = require('express').Router();
-const matchController = require('../controllers/match.controller');
+const matchController = require('./controller');
 
 matchRouter.get('/', matchController.getMatches);
 matchRouter.get('/:teamid', matchController.getMatchesByTeam);

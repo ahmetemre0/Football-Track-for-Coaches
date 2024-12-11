@@ -1,4 +1,4 @@
-const Action = require('../handlers/action.handler');
+const Action = require('./handler');
 
 const multer = require('multer');
 const path = require('path');

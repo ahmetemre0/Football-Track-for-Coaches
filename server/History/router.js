@@ -1,4 +1,4 @@
-const historyController = require('../controllers/history.controller');
+const historyController = require('./controller');
 const historyRouter = require('express').Router();
 
 historyRouter.get('/', historyController.getAll);
