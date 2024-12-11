@@ -67,13 +67,11 @@ exports.getByID = (id) => {
     });
 };
 
-exports.insert = (homeTeamID, awayTeamID, homeScore, awayScore) => {
+exports.insert = (homeTeamID, awayTeamID) => {
     let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    if (!homeScore) homeScore = 'NULL';
-    if (!awayScore) awayScore = 'NULL';
-    let query = `INSERT INTO match (homeTeamID, awayTeamID, homeScore, awayScore, date) VALUES (? , ? , ?,?, ?)`;
+    let query = `INSERT INTO match (homeTeamID, awayTeamID, date) VALUES (? , ? , ?)`;
     return new Promise((resolve, reject) => {
-        db.run(query, [homeTeamID, awayTeamID, homeScore, awayScore, date], function (err) {
+        db.run(query, [homeTeamID, awayTeamID, date], function (err) {
             if (err) {
                 console.error(err.message);
                 reject(err); 

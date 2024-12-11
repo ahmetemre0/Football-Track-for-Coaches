@@ -276,3 +276,45 @@ exports.getCurrent11 = async (req, res) => {
         res.status(500).json({ message: 'Error fetching current 11', success: false });
     }
 }
+
+exports.createFirst11 = async (req, res) => {
+    try {
+        if (!req.params.teamid) {
+            res.status(400).json({ message: 'Team ID is required', success: false });
+            return;
+        }
+        if (!req.params.matchid) {
+            res.status(400).json({ message: 'Match ID is required', success: false });
+            return;
+        }
+        if (!req.body.players) {
+            res.status(400).json({ message: 'Players are required', success: false });
+            return;
+        }
+        let teams = await Match.getTeams(req.params.matchid);
+        let team = teams.find(team => team.ID == req.params.teamid);
+        if (!team) {
+            res.status(400).json({ message: 'Team is not in this match', success: false });
+            return;
+        }
+        let players = await Player.getByIDs(req.body.players);
+        if (players.length != 11) {
+            res.status(400).json({ message: 'Exactly 11 players are required', success: false });
+            return;
+        }
+        let first11 = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
+        if (first11) {
+            res.status(400).json({ message: 'First 11 already exists', success: false });
+            return;
+        }
+        await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.players);
+
+        first11 = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
+
+        res.json({ message: 'First 11 successfully created', first11: first11, success: true });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error creating first 11', success: false });
+    }
+}
