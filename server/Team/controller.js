@@ -238,7 +238,7 @@ exports.getSquad = async (req, res) => {
             return;
         }
         
-        let squad = await Comp.getSquad(req.params.matchid, req.params.teamid);
+        let squad = await Comp.getSquad(req.params.teamid, req.params.matchid);
         res.json({squad: squad, success: true});
     }
     catch (error) {

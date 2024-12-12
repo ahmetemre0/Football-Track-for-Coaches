@@ -60,7 +60,7 @@ exports.substitute = async (teamID, matchID, outPlayerID, inPlayerID) => {
     });
 }
 
-exports.getSquad = (teamID, matchID) => {
+exports.getSquad = async (teamID, matchID) => {
     let query = `
         SELECT p.ID, p.name, p.number, p.photoPath,
         c.isFirstEleven, c.inMatch
