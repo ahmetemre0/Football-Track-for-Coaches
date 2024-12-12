@@ -61,7 +61,13 @@ exports.substitute = async (teamID, matchID, outPlayerID, inPlayerID) => {
 }
 
 exports.getSquad = (teamID, matchID) => {
-    let query = `SELECT * FROM comp WHERE teamID = ${teamID} AND matchID = ${matchID}`;
+    let query = `
+        SELECT p.ID AS playerID, p.name AS playerName, p.number AS playerNumber,
+        c.isFirstEleven, c.inMatch
+        FROM comp c
+        JOIN player p ON c.playerID = p.ID
+        WHERE c.teamID = ${teamID} AND c.matchID = ${matchID}
+    `;
     return new Promise((resolve, reject) => {
         db.all(query, (err, rows) => {
             if (err) {
