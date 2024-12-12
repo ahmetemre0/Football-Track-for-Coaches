@@ -169,3 +169,16 @@ exports.deleteMatch = async (matchID) => {
         });
     });
 }
+
+exports.deleteFirstEleven = async (teamID, matchID) => {
+    let query = `UPDATE comp SET isFirstEleven = 0, inMatch = 0 WHERE teamID = ${teamID} AND matchID = ${matchID}`;
+    return new Promise((resolve, reject) => {
+        db.run(query, function (err) {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve();
+        });
+    });
+}
