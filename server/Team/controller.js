@@ -287,7 +287,7 @@ exports.createFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Match ID is required', success: false });
             return;
         }
-        if (!req.body.players) {
+        if (!req.body.firstEleven) {
             res.status(400).json({ message: 'Players are required', success: false });
             return;
         }
@@ -297,21 +297,21 @@ exports.createFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Team is not in this match', success: false });
             return;
         }
-        let players = await Player.getByIDs(req.body.players);
-        if (players.length != 11) {
+        if (req.body.firstEleven.length != 11) {
             res.status(400).json({ message: 'Exactly 11 players are required', success: false });
             return;
         }
-        let first11 = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
-        if (first11) {
+        
+        let firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
+        if (firstEleven) {
             res.status(400).json({ message: 'First 11 already exists', success: false });
             return;
         }
         await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.players);
 
-        first11 = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
+        firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
 
-        res.json({ message: 'First 11 successfully created', first11: first11, success: true });
+        res.json({ message: 'First 11 successfully created', firstEleven: firstEleven, success: true });
     }
     catch (error) {
         console.error(error);

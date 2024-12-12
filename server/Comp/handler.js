@@ -80,7 +80,12 @@ exports.getSquad = (teamID, matchID) => {
 }
 
 exports.getFirstEleven = (teamID, matchID) => {
-    let query = `SELECT * FROM comp WHERE teamID = ${teamID} AND matchID = ${matchID} AND isFirstEleven = 1`;
+    let query = `SELECT
+        p.ID, p.name, p.number, p.photoPath,
+        c.isFirstEleven, c.inMatch
+        FROM comp c
+        JOIN player p ON c.playerID = p.ID
+        WHERE c.teamID = ${teamID} AND c.matchID = ${matchID} AND c.isFirstEleven = 1`;
     return new Promise((resolve, reject) => {
         db.all(query, (err, rows) => {
             if (err) {
@@ -93,7 +98,12 @@ exports.getFirstEleven = (teamID, matchID) => {
 }
 
 exports.getCurrent11 = (teamID, matchID) => {
-    let query = `SELECT * FROM comp WHERE teamID = ${teamID} AND matchID = ${matchID} AND inMatch = 1`;
+    let query = `SELECT 
+        p.ID, p.name, p.number, p.photoPath,
+        c.isFirstEleven, c.inMatch
+        FROM comp c
+        JOIN player p ON c.playerID = p.ID
+        WHERE c.teamID = ${teamID} AND c.matchID = ${matchID} AND c.inMatch = 1`;
     return new Promise((resolve, reject) => {
         db.all(query, (err, rows) => {
             if (err) {
