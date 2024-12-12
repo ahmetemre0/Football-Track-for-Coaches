@@ -284,7 +284,7 @@ exports.createFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Exactly 11 players are required', success: false });
             return;
         }
-        await Comp.deleteFirstEleven(req.params.matchid, req.params.teamid);
+        //await Comp.deleteFirstEleven(req.params.matchid, req.params.teamid);
         await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.firstEleven);
 
         firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);

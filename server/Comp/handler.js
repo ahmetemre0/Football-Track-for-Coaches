@@ -142,17 +142,16 @@ exports.updateMatch = async (matchID, homeTeamID, awayTeamID, homeTeamSquad, awa
     });
 }
 
-exports.createFirstEleven = async (teamID, matchID, firstEleven) => {
-    let query = `UPDATE comp SET isFirstEleven = 1, inMatch = 1 WHERE teamID = ${teamID} AND matchID = ${matchID} AND playerID = ?`;
+exports.createFirstEleven = async (matchID, teamID, firstEleven) => {
+    let query = `UPDATE comp SET isFirstEleven = 1, inMatch = 1 WHERE teamID = ${teamID} AND matchID = ${matchID} AND playerID IN (${firstEleven.join()})`;
+    console.log(query);
     return new Promise((resolve, reject) => {
-        for (let playerID of firstEleven) {
-            db.run(query, [playerID], function (err) {
+            db.run(query, function (err) {
                 if (err) {
                     console.error(err.message);
                     reject(err);
                 }
             });
-        }
         resolve();
     });
 }
