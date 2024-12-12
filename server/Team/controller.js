@@ -237,11 +237,6 @@ exports.getSquad = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let teams = await Match.getTeams(req.params.matchid);
-        if (teams.homeTeamID != req.params.teamid && teams.awayTeamID != req.params.teamid) {
-            res.status(400).json({ message: 'Team is not in this match', success: false });
-            return;
-        }
         
         let squad = await Comp.getSquad(req.params.matchid, req.params.teamid);
         res.json({squad: squad, success: true});
