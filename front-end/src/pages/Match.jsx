@@ -40,14 +40,13 @@ const Match = () => {
         //console.log('clicked to ', match);
     }
 
-    const handleForm = (key, value) => {
-        setForm({ ...form, [key]: value });
+    const handleForm = async (key, value) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
     }
 
     const handleCreateMatch = async () => {
         let createdMatch = await createMatch(form)
         
-        console.log(createdMatch);
         if (createdMatch) {
             matches.push(createdMatch);
             setIsCreateModalOpen(false);
