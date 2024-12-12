@@ -79,7 +79,7 @@ exports.getSquad = async (teamID, matchID) => {
     });
 }
 
-exports.getFirstEleven = (teamID, matchID) => {
+exports.getFirstEleven = (matchID, teamID) => {
     let query = `SELECT
         p.ID, p.name, p.number, p.photoPath,
         c.isFirstEleven, c.inMatch
@@ -97,7 +97,7 @@ exports.getFirstEleven = (teamID, matchID) => {
     });
 }
 
-exports.getCurrent11 = (teamID, matchID) => {
+exports.getCurrent11 = (matchID, teamID) => {
     let query = `SELECT 
         p.ID, p.name, p.number, p.photoPath,
         c.isFirstEleven, c.inMatch
@@ -169,7 +169,7 @@ exports.deleteMatch = async (matchID) => {
     });
 }
 
-exports.deleteFirstEleven = async (teamID, matchID) => {
+exports.deleteFirstEleven = async (matchID, teamID) => {
     let query = `UPDATE comp SET isFirstEleven = 0, inMatch = 0 WHERE teamID = ${teamID} AND matchID = ${matchID}`;
     return new Promise((resolve, reject) => {
         db.run(query, function (err) {

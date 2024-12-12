@@ -212,12 +212,6 @@ exports.getFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let teams = await Match.getTeams(req.params.matchid);
-        let team = teams.find(team => team.ID == req.params.teamid);
-        if (!team) {
-            res.status(400).json({ message: 'Team is not in this match', success: false });
-            return;
-        }
         let first11 = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
         res.json({first11: first11, success: true});
     }
@@ -284,7 +278,7 @@ exports.createFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Exactly 11 players are required', success: false });
             return;
         }
-        //await Comp.deleteFirstEleven(req.params.matchid, req.params.teamid);
+        await Comp.deleteFirstEleven(req.params.matchid, req.params.teamid);
         await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.firstEleven);
 
         firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
