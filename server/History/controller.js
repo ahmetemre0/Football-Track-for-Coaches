@@ -108,8 +108,9 @@ exports.createHistory = async (req, res) => {
             actionPointX = req.body.actionPointX;
             actionPointY = req.body.actionPointY;
         }
+        console.log(req.body.actionTypeID, team, player1, player2, req.body.minutes, req.body.seconds, actionPointX, actionPointY);
         let ID = await History.insert(req.params.matchid, req.body.actionTypeID, team, player1, player2, req.body.minutes, req.body.seconds, actionPointX, actionPointY);
-        
+
         if (req.body.actionTypeID == 2) {
             await Match.updateScore(req.params.matchid, req.body.actionTeamID);
         }
@@ -117,7 +118,7 @@ exports.createHistory = async (req, res) => {
         if (req.body.actionTypeID == 13) {
             await Comp.substitute(req.params.matchid, req.body.actionTeamID, req.body.actionPlayer1ID, req.body.actionPlayer2ID);
         }
-        
+
         let history = await History.getByID(ID);
         res.json({
             message: 'History successfully created',
@@ -164,7 +165,7 @@ exports.updateHistory = async (req, res) => {
             res.status(400).json({ message: 'Seconds must be between 0 and 59', success: false });
             return;
         }
-        
+
         let action = await Action.getByID(history.actionTypeID);
         let player1 = null;
         let player2 = null;

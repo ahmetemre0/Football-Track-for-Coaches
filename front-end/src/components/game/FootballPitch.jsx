@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ActionModal from './ActionModal';
 
-export default function FootballPitch({ onActionSubmit }) {
+export default function FootballPitch({ actions, match, homeTeam, awayTeam, onActionSubmit }) {
     const [clickedCoords, setClickedCoords] = useState(null);
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,6 +75,10 @@ export default function FootballPitch({ onActionSubmit }) {
             </div>
             {isModalOpen && (
                 <ActionModal
+                    actions={actions}
+                    match={match}
+                    homeTeam={homeTeam}
+                    awayTeam={awayTeam}
                     onClose={() => setIsModalOpen(false)}
                     onSubmit={handleModalSubmit}
                 />

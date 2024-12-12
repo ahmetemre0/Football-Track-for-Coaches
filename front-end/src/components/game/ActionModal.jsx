@@ -1,25 +1,9 @@
 import React, { useState } from 'react';
 import ModalPlayerList from './ModalPlayerList';
+import { sendAction } from '../../services/game';
 
-const actions = [
-    { id: 1, name: 'Goal' },
-    { id: 2, name: 'Penalty' },
-    { id: 3, name: 'Freekick' },
-];
 
-const teams = [
-    { id: 1, name: 'Team A' },
-    { id: 2, name: 'Team B' },
-];
-
-const players = [
-    { id: 1, name: 'Player 1', teamId: 1 },
-    { id: 2, name: 'Player 2', teamId: 1 },
-    { id: 3, name: 'Player 3', teamId: 2 },
-    { id: 4, name: 'Player 4', teamId: 2 },
-];
-
-export default function ActionModal({ onClose, onSubmit }) {
+export default function ActionModal({ actions, match, homeTeam, awayTeam, onClose, onSubmit }) {
     const [selectedAction, setSelectedAction] = useState(null);
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [selectedPlayers, setSelectedPlayers] = useState([]);
@@ -33,17 +17,21 @@ export default function ActionModal({ onClose, onSubmit }) {
     };
 
     const handleSubmit = () => {
-        onSubmit({
-            actionId: selectedAction,
-            teamId: selectedTeam,
-            players: selectedPlayers,
-        });
+        const actionData = {
+            actionTypeID: selectedAction,
+            actionTeamID: selectedTeam,
+            actionPlayer1ID: selectedPlayers[0],
+            actionPlayer2ID: selectedPlayers[1]
+        };
+        console.log('Action Data:', actionData);
+        sendAction(actionData, match.matchID);
     };
 
-    const filteredPlayers = players.filter((player) => player.teamId === selectedTeam);
+    console.log("match", match);
 
     return (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-md w-full md:w-3/4 lg:w-1/2">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-md w-full md:w-3/4 lg:w-1/2 max-h-[66vh] overflow-y-auto">
+
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Select Match Action</h2>
 
             {/* Action Selection */}
@@ -57,8 +45,8 @@ export default function ActionModal({ onClose, onSubmit }) {
                     <option value="" disabled>
                         Select an action...
                     </option>
-                    {actions.map((action) => (
-                        <option key={action.id} value={action.id}>
+                    {actions?.map((action) => (
+                        <option key={action.ID} value={action.ID}>
                             {action.name}
                         </option>
                     ))}
@@ -76,11 +64,16 @@ export default function ActionModal({ onClose, onSubmit }) {
                     <option value="" disabled>
                         Select a team...
                     </option>
-                    {teams.map((team) => (
-                        <option key={team.id} value={team.id}>
-                            {team.name}
-                        </option>
-                    ))}
+
+                    <option value={match?.homeTeamID}>
+                        {match.homeTeamName}
+                    </option>
+
+                    <option value={match.awayTeamID}>
+                        {match.awayTeamName}
+                    </option>
+
+
                 </select>
             </div>
 
@@ -89,7 +82,7 @@ export default function ActionModal({ onClose, onSubmit }) {
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Players</label>
                     <ModalPlayerList
-                        players={filteredPlayers}
+                        players={selectedTeam === match.homeTeamID ? homeTeam : awayTeam}
                         selectedPlayers={selectedPlayers}
                         onPlayerToggle={handlePlayerToggle}
                     />

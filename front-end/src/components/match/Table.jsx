@@ -6,15 +6,15 @@ const MatchTable = (props) => {
 
     return (
         <>
-        {!matches || matches.length === 0  ?
-        (
-            <p>No matches available.</p>
-        ) : 
-        (
-        <div className="flex flex-wrap justify-center gap-8">
-            { matches.map(match => <ScoreCard key={match.matchID} match={match} onClick={onMatchClick}  />) }
-        </div>
-        )}
+            {!matches || matches.length === 0 ?
+                (
+                    <p>No matches available.</p>
+                ) :
+                (
+                    <div className="flex flex-wrap justify-center gap-8">
+                        {matches.map(match => <ScoreCard key={match.matchID} match={match} onClick={() => onMatchClick(match)} />)}
+                    </div>
+                )}
         </>
     );
 }

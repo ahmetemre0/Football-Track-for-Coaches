@@ -1,47 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from "react-router-dom";
 import FootballPitch from '../components/game/FootballPitch';
 import PlayerList from '../components/game/PlayerList';
 import ActionList from '../components/game/ActionList';
 import ActionModal from '../components/game/ActionModal';
+import { getActions, getSquad } from '../services/game';
 
-const teams = [
-    {
-        id: 1,
-        name: 'Team 1',
-        players: [
-            { id: 101, name: 'Player 1', photo: 'player1.jpg' },
-            { id: 102, name: 'Player 2', photo: 'player2.jpg' },
-            { id: 103, name: 'Player 3', photo: 'player3.jpg' },
-            { id: 104, name: 'Player 4', photo: 'player4.jpg' },
-            { id: 105, name: 'Player 5', photo: 'player5.jpg' },
-            { id: 106, name: 'Player 6', photo: 'player6.jpg' },
-            { id: 107, name: 'Player 7', photo: 'player7.jpg' },
-            { id: 108, name: 'Player 8', photo: 'player8.jpg' },
-            { id: 109, name: 'Player 9', photo: 'player9.jpg' },
-            { id: 110, name: 'Player 10', photo: 'player10.jpg' },
-            { id: 111, name: 'Player 11', photo: 'player11.jpg' },
-        ],
-    },
-    {
-        id: 2,
-        name: 'Team 2',
-        players: [
-            { id: 201, name: 'Player 1', photo: 'player1.jpg' },
-            { id: 202, name: 'Player 2', photo: 'player2.jpg' },
-            { id: 203, name: 'Player 3', photo: 'player3.jpg' },
-            { id: 204, name: 'Player 4', photo: 'player4.jpg' },
-            { id: 205, name: 'Player 5', photo: 'player5.jpg' },
-            { id: 206, name: 'Player 6', photo: 'player6.jpg' },
-            { id: 207, name: 'Player 7', photo: 'player7.jpg' },
-            { id: 208, name: 'Player 8', photo: 'player8.jpg' },
-            { id: 209, name: 'Player 9', photo: 'player9.jpg' },
-            { id: 210, name: 'Player 10', photo: 'player10.jpg' },
-            { id: 211, name: 'Player 11', photo: 'player11.jpg' },
-        ],
-    },
-];
 
 const Game = () => {
+    const location = useLocation(); // Get the state passed during navigation
+    const { selectedMatch } = location.state || {}; // Retrieve match data
+    const [homeTeam, setHomeTeam] = useState(null);
+    const [awayTeam, setAwayTeam] = useState(null);
+    const [actions, setActions] = useState([]);
+
+
+
+    useEffect(() => {
+        if (selectedMatch) {
+            getSquad(selectedMatch.homeTeamID, selectedMatch.matchID)
+                .then((data) => setHomeTeam(data))
+                .catch((error) => console.error(error));
+
+            getSquad(selectedMatch.awayTeamID, selectedMatch.matchID)
+                .then((data) => setAwayTeam(data))
+                .catch((error) => console.error(error));
+            getActions()
+                .then((data) => setActions(data))
+                .catch((error) => console.error(error));
+        }
+    }, [selectedMatch]);
+
+
+
+    console.log('Selected Match:', selectedMatch);
+    console.log('Actions:', actions);
+
     const [lastAction, setLastAction] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedAction, setSelectedAction] = useState(null); // Ensure this is correctly set
@@ -72,17 +66,21 @@ const Game = () => {
     return (
         <main>
             {/* Action List Component */}
-            <ActionList onActionClick={handleActionClick} setSelectedAction={setSelectedAction} />
+            <ActionList onActionClick={handleActionClick} actions={actions} />
 
             <div className="flex h-[500px] items-center justify-between ">
-                <PlayerList players={teams[0].players} />
-                <FootballPitch onClick={handlePitchClick} />
-                <PlayerList players={teams[1].players} />
+                <PlayerList players={homeTeam} />
+                <FootballPitch actions={actions} match={selectedMatch} homeTeam={homeTeam} awayTeam={awayTeam} onClick={handlePitchClick} />
+                <PlayerList players={awayTeam} />
             </div>
 
             {/* Modal */}
             {isModalOpen && (
                 <ActionModal
+                    actions={actions}
+                    match={selectedMatch}
+                    homeTeam={homeTeam}
+                    awayTeam={awayTeam}
                     onClose={() => setIsModalOpen(false)}
                     onActionSubmit={handleActionSubmit}
                     selectedAction={selectedAction}  // Pass selected action to modal
