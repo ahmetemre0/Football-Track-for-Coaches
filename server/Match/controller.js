@@ -212,3 +212,22 @@ exports.getMatchesByTeams = async (req, res) => {
         res.status(500).json({ message: 'Error fetching matches', success: false });
     }
 }
+
+exports.startMatch = async (req, res) => {
+    try {
+        if (!req.params.matchid) {
+            res.status(400).json({ message: 'Match ID is required', success: false });
+            return;
+        }
+        let match = await Match.getByID(req.params.matchid);
+        if (!match) {
+            res.status(404).json({ message: 'Match not found', success: false });
+            return;
+        }
+        await Match.startMatch(req.params.matchid);
+        res.json({ message: 'Match started', success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error starting match', success: false });
+    }
+}

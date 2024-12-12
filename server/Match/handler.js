@@ -393,3 +393,25 @@ exports.updateScore = (matchID, teamID) => {
         });
     });
 }
+
+exports.startMatch = (matchID) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE 
+                match
+            SET 
+                homeScore = 0,
+                awayScore = 0
+            WHERE
+                ID = ${matchID}
+        `;
+        db.run(query, (err) => {
+            if (err) {
+                console.error(err.message);
+                reject(err); 
+            } else {
+                resolve(); 
+            }
+        });
+    });
+}

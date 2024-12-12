@@ -10,6 +10,7 @@ matchRouter.get('/:teamid/next', matchController.getNextMatch);
 matchRouter.get('/:teamid/:opponentid', matchController.getMatchesByTeams);
 
 matchRouter.post('/', matchController.createMatch);
+matchRouter.post('/:matchid/start', matchController.startMatch);
 
 matchRouter.put('/:id', matchController.updateMatch);
 
