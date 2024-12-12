@@ -290,12 +290,6 @@ exports.createFirst11 = async (req, res) => {
             res.status(400).json({ message: 'Exactly 11 players are required', success: false });
             return;
         }
-        
-        let firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
-        if (firstEleven) {
-            res.status(400).json({ message: 'First 11 already exists', success: false });
-            return;
-        }
         await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.players);
 
         firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
