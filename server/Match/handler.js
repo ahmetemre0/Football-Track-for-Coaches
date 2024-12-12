@@ -361,7 +361,7 @@ exports.getTeams = (matchID) => {
             WHERE
                 match.ID = ${matchID}
         `;
-        db.get(query, (err, row) => {
+        db.all(query, (err, row) => {
             if (err) {
                 console.error(err.message);
                 reject(err); 
