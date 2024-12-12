@@ -257,12 +257,6 @@ exports.getCurrent11 = async (req, res) => {
             res.status(400).json({ message: 'Team ID is required', success: false });
             return;
         }
-        let teams = await Match.getTeams(req.params.matchid);
-        let team = teams.find(team => team.ID == req.params.teamid);
-        if (!team) {
-            res.status(400).json({ message: 'Team is not in this match', success: false });
-            return;
-        }
         let current11 = await Comp.getCurrent11(req.params.matchid, req.params.teamid);
         res.json({current11: current11, success: true});
     }
