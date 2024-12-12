@@ -1,5 +1,6 @@
 const Match = require('./handler');
 const Comp = require('../Comp/handler');
+const History = require('../History/handler');
 
 exports.getMatches = async (req, res) => {
     try {
@@ -37,6 +38,8 @@ exports.deleteMatch = async (req, res) => {
             res.status(400).json({ message: 'Match ID is required', success: false });
             return;
         }
+        await Comp.deleteMatch(req.params.id);
+        await History.deleteMatch(req.params.id);
         await Match.delete(req.params.id);
         res.json({ message: 'Match successfully deleted', success: true });
     } catch (error) {

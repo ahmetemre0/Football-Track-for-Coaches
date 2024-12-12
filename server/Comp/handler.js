@@ -156,3 +156,16 @@ exports.createFirstEleven = async (teamID, matchID, firstEleven) => {
         resolve();
     });
 }
+
+exports.deleteMatch = async (matchID) => {
+    let query = `DELETE FROM comp WHERE matchID = ${matchID}`;
+    return new Promise((resolve, reject) => {
+        db.run(query, function (err) {
+            if (err) {
+                console.error(err.message);
+                reject(err);
+            }
+            resolve();
+        });
+    });
+}
