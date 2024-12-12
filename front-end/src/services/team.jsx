@@ -43,4 +43,9 @@ const getTeamNames = async () => {
     return handleResponse(response)?.teams;
 }
 
-export { getTeams, getTeamById, createTeam, updateTeam, deleteTeam, getPlayersOfTeam, getTeamNames };
+const getFirstEighteen = async (teamId, matchId) => {
+    const response = await axios.get(`${API_URL}/${teamId}/${matchId}/squad`);
+    return handleResponse(response)?.squad;
+}
+
+export { getTeams, getTeamById, createTeam, updateTeam, deleteTeam, getPlayersOfTeam, getTeamNames, getFirstEighteen };

@@ -3,15 +3,21 @@ import { useState, useEffect } from "react";
 import { createMatch, getMatches, getFilteredMatches } from "../services/match";
 import { getTeamNames } from "../services/team";
 import CreateMatchModalBody from "../components/match/CreateModal";
+import StartMatchModalBody from "../components/match/StartModal";
 import Modal from "../components/common/Modal";
 
 const Match = () => {
 
     const [matches, setMatches] = useState([]);
-    const [form, setForm] = useState({});
+    const [selectedMatch, setSelectedMatch] = useState({});
+    const [createForm, setCreateForm] = useState({});
+    const [startForm, setStartForm] = useState({});
     
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isStartModalOpen, setIsStartModalOpen] = useState(false);
     const [filters, setFilters] = useState({
+        awayTeamSquad: [],
+        homeTeamSquad: [],
         teamId1: 0,
         teamId2: 0,
     });
@@ -33,24 +39,32 @@ const Match = () => {
         getFilteredMatches(filters.teamId1, filters.teamId2)
             .then((data) => {setMatches(data)})
             .catch((error) => console.error(error));
-    }
-    , [filters]);
+    }, [filters]);
 
     const handleClick = (match) => {
-        //console.log('clicked to ', match);
+        setSelectedMatch(match);
+        setIsStartModalOpen(true);
     }
 
-    const handleForm = async (key, value) => {
-        setForm((prev) => ({ ...prev, [key]: value }));
+    const handleCreateForm = async (key, value) => {
+        setCreateForm((prev) => ({ ...prev, [key]: value }));
+    }
+
+    const handleStartForm = async (key, value) => {
+        setStartForm((prev) => ({ ...prev, [key]: value }));
     }
 
     const handleCreateMatch = async () => {
-        let createdMatch = await createMatch(form)
+        let createdMatch = await createMatch(createForm)
         
         if (createdMatch) {
             matches.push(createdMatch);
             setIsCreateModalOpen(false);
         }
+    }
+
+    const handleStartMatch = async () => {
+        //TODO: handle request with startform her"e
     }
 
     
@@ -96,8 +110,22 @@ const Match = () => {
             <CreateMatchModalBody
                 handleCancel={() => setIsCreateModalOpen(false)}
                 handleProceed={handleCreateMatch}
-                handleForm={handleForm}
+                handleForm={handleCreateForm}
             />
+        </Modal>
+
+        <Modal
+            isOpen={isStartModalOpen}
+            close={() => setIsStartModalOpen(false)}
+            title="Start Match"
+        >
+            <StartMatchModalBody
+                handleCancel={() => setIsStartModalOpen(false)}
+                handleProceed={handleStartMatch}
+                handleForm={handleStartForm}
+                currentMatch={selectedMatch}
+            />
+
         </Modal>
         </>
     );

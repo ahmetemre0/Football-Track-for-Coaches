@@ -210,7 +210,7 @@ const CreateMatchModalBody = (props) => {
             <button onClick={handleCancel} className="btn btn-ghost border-slate-700 join-item">
                 Cancel
             </button>
-            <button onClick={handleProceed} disabled={selectedAwayPlayers.length !== 1 || selectedHomePlayers.length !== 1} className="btn bg-green-600 hover:bg-green-700 border-slate-700 text-white join-item">
+            <button onClick={handleProceed} disabled={selectedAwayPlayers.length !== 18 || selectedHomePlayers.length !== 18} className="btn bg-green-600 hover:bg-green-700 border-slate-700 text-white join-item">
                 Create
             </button>
         </div>
