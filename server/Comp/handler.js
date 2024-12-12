@@ -62,7 +62,7 @@ exports.substitute = async (teamID, matchID, outPlayerID, inPlayerID) => {
 
 exports.getSquad = (teamID, matchID) => {
     let query = `
-        SELECT p.ID AS playerID, p.name AS playerName, p.number AS playerNumber,
+        SELECT p.ID, p.name, p.number, p.photoPath
         c.isFirstEleven, c.inMatch
         FROM comp c
         JOIN player p ON c.playerID = p.ID
