@@ -1,7 +1,7 @@
 import MatchTable from "../components/match/Table";
 import { useState, useEffect } from "react";
-import { createMatch, getMatches, getFilteredMatches } from "../services/match";
-import { getTeamNames } from "../services/team";
+import { createMatch, getMatches, getFilteredMatches, deleteMatch} from "../services/match";
+import { getTeamNames, setFirstEleven } from "../services/team";
 import CreateMatchModalBody from "../components/match/CreateModal";
 import StartMatchModalBody from "../components/match/StartModal";
 import Modal from "../components/common/Modal";
@@ -63,8 +63,19 @@ const Match = () => {
         }
     }
 
+    const handleDelete = async () => {
+        let response = await deleteMatch(selectedMatch?.matchID);
+        if (response.success) {
+          setMatches((matches) => matches.filter((match) => match.matchID !== selectedMatch.matchID));
+          setIsStartModalOpen(false);
+        }
+    }
+
     const handleStartMatch = async () => {
-        //TODO: handle request with startform her"e
+        console.log("start form:", startForm);
+        await setFirstEleven(selectedMatch.homeTeamID, selectedMatch.matchID, startForm.homeTeamFirstEleven);
+        await setFirstEleven(selectedMatch.awayTeamID, selectedMatch.matchID, startForm.awayTeamFirstEleven);
+        setIsStartModalOpen(false);
     }
 
     
@@ -123,6 +134,7 @@ const Match = () => {
                 handleCancel={() => setIsStartModalOpen(false)}
                 handleProceed={handleStartMatch}
                 handleForm={handleStartForm}
+                handleDelete={handleDelete}
                 currentMatch={selectedMatch}
             />
 

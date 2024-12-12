@@ -291,7 +291,7 @@ exports.createFirst11 = async (req, res) => {
             return;
         }
         await Comp.deleteFirstEleven(req.params.matchid, req.params.teamid);
-        await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.players);
+        await Comp.createFirstEleven(req.params.matchid, req.params.teamid, req.body.firstEleven);
 
         firstEleven = await Comp.getFirstEleven(req.params.matchid, req.params.teamid);
 

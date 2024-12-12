@@ -4,7 +4,7 @@ import { API_BASE_URL } from "../../services/common";
 
 const StartMatchModalBody = (props) => {
 
-    const { handleCancel, handleProceed, handleForm, currentMatch } = props;
+    const { handleCancel, handleProceed, handleForm, handleDelete, currentMatch } = props;
 
     const [ homePlayers, setHomePlayers ] = useState([]);
     const [ awayPlayers, setAwayPlayers ] = useState([]);
@@ -154,13 +154,19 @@ const StartMatchModalBody = (props) => {
         </div>
     </div>
 
-    <div className="join flex justify-end mt-6">
-        <button onClick={handleCancel} className="btn btn-ghost border-slate-700 join-item">
-            Cancel
+    <div className="flex justify-between mt-6">
+        <button onClick={handleDelete} className="btn btn-danger border-slate-700">
+            Delete
         </button>
-        <button onClick={handleProceed} disabled={selectedAwayPlayers.length !== 11 || selectedHomePlayers.length !== 11} className="btn bg-green-600 hover:bg-green-700 border-slate-700 text-white join-item">
-            Create
-        </button>
+
+        <div className="join flex justify-end">
+            <button onClick={handleCancel} className="btn btn-ghost border-slate-700 join-item">
+                Cancel
+            </button>
+            <button onClick={handleProceed} disabled={selectedAwayPlayers.length !== 11 || selectedHomePlayers.length !== 11} className="btn bg-green-600 hover:bg-green-700 border-slate-700 text-white join-item">
+                Create
+            </button>
+        </div>
     </div>
     </>
 )}
