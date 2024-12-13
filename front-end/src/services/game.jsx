@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { API_BASE_URL, handleResponse } from './common';
+import { act } from 'react';
 
 axios.defaults.validateStatus = function (status) { return true; }
 
@@ -22,11 +23,11 @@ const sendAction = async (actionData, matchID) => {
             actionTeamID: actionData.actionTeamID,
             selectedTeam: actionData.selectedTeam,
             actionPlayer1ID: actionData.actionPlayer1ID,
-            actionPlayer2ID: actionData.actionPlayer2ID,//aşağısı dummy
-            actionPointX: 0.5,
-            actionPointY: 0.3,
-            minutes: 15,
-            seconds: 30,
+            actionPlayer2ID: actionData.actionPlayer2ID,
+            actionPointX: actionData.actionPointX,
+            actionPointY: actionData.actionPointY,
+            minutes: actionData.minutes,
+            seconds: actionData.seconds,
         }
     );
     return handleResponse(response);

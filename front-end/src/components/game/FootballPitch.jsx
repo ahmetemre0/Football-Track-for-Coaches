@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ActionModal from './ActionModal';
 
-export default function FootballPitch({ actions, match, homeTeam, awayTeam, onActionSubmit }) {
+export default function FootballPitch({ actions, match, homeTeam, awayTeam, onActionSubmit, currentTime, setIsPitchModalOpen }) {
     const [clickedCoords, setClickedCoords] = useState(null);
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +31,7 @@ export default function FootballPitch({ actions, match, homeTeam, awayTeam, onAc
     };
 
     const handleCanvasClick = (event) => {
+        console.log(currentTime)
         const canvas = canvasRef.current;
         if (canvas) {
             const rect = canvas.getBoundingClientRect();
@@ -43,14 +44,22 @@ export default function FootballPitch({ actions, match, homeTeam, awayTeam, onAc
 
             setClickedCoords({ x: normalizedX, y: normalizedY });
             setIsModalOpen(true); // Open the modal
+            setIsPitchModalOpen(true);
         }
     };
 
     const handleModalSubmit = (formData) => {
-        // Combine coordinates with form data and submit
-        const actionData = { ...formData, coordinates: clickedCoords };
-        onActionSubmit(actionData);
+        const actionData = {
+            ...formData,
+            actionPointX: clickedCoords.x,
+            actionPointY: clickedCoords.y,
+            minutes: currentTime.minutes,
+            seconds: currentTime.seconds
+        };
+
+        onActionSubmit(actionData); // Call the parent-provided function to handle submission
         setIsModalOpen(false); // Close the modal
+        setIsPitchModalOpen(false);
     };
 
     return (
@@ -75,12 +84,14 @@ export default function FootballPitch({ actions, match, homeTeam, awayTeam, onAc
             </div>
             {isModalOpen && (
                 <ActionModal
+                    isPositional={true}
                     actions={actions}
                     match={match}
                     homeTeam={homeTeam}
                     awayTeam={awayTeam}
                     onClose={() => setIsModalOpen(false)}
-                    onSubmit={handleModalSubmit}
+                    onActionSubmit={handleModalSubmit}
+                    currentTime={currentTime}
                 />
             )}
         </div>

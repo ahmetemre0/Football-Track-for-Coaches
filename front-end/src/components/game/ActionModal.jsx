@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalPlayerList from './ModalPlayerList';
-import { sendAction } from '../../services/game';
 
 
-export default function ActionModal({ actions, match, homeTeam, awayTeam, onClose, onSubmit }) {
+export default function ActionModal({ isPositional, actions, match, homeTeam, awayTeam, onClose, onActionSubmit, selection, currentTime }) {
     const [selectedAction, setSelectedAction] = useState(null);
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [selectedPlayers, setSelectedPlayers] = useState([]);
+
 
     const handlePlayerToggle = (playerId) => {
         setSelectedPlayers((prev) =>
@@ -18,16 +18,21 @@ export default function ActionModal({ actions, match, homeTeam, awayTeam, onClos
 
     const handleSubmit = () => {
         const actionData = {
-            actionTypeID: selectedAction,
+            actionTypeID: selectedAction.ID,
             actionTeamID: selectedTeam,
             actionPlayer1ID: selectedPlayers[0],
-            actionPlayer2ID: selectedPlayers[1]
+            actionPlayer2ID: selectedPlayers[1],
+            minutes: currentTime?.minutes,
+            seconds: currentTime?.seconds,
         };
-        console.log('Action Data:', actionData);
-        sendAction(actionData, match.matchID);
+        onActionSubmit(actionData);
     };
 
-    console.log("match", match);
+    useEffect(() => {
+        if (selection) {
+            setSelectedAction(selection);
+        }
+    }, [selection]);
 
     return (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-md w-full md:w-3/4 lg:w-1/2 max-h-[66vh] overflow-y-auto">
@@ -38,18 +43,24 @@ export default function ActionModal({ actions, match, homeTeam, awayTeam, onClos
             <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Action</label>
                 <select
-                    value={selectedAction || ''}
-                    onChange={(e) => setSelectedAction(parseInt(e.target.value))}
+                    defaultValue={actions?.find((action) => action.name === selection?.name)?.ID || ''} // Match the action by name
+                    onChange={(e) => {
+                        const selectedID = parseInt(e.target.value, 10);
+                        const filteredAction = actions?.find((action) => action.ID === selectedID);
+                        setSelectedAction(filteredAction); // Set the selected action by name
+                    }}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-2 px-3 text-sm"
                 >
                     <option value="" disabled>
                         Select an action...
                     </option>
-                    {actions?.map((action) => (
-                        <option key={action.ID} value={action.ID}>
-                            {action.name}
-                        </option>
-                    ))}
+                    {actions?.map((action) =>
+                        (isPositional ? action.hasArea === 1 : action.hasArea === 0) && (
+                            <option key={action.ID} value={action.ID}>
+                                {action.name}
+                            </option>
+                        )
+                    )}
                 </select>
             </div>
 
@@ -66,11 +77,11 @@ export default function ActionModal({ actions, match, homeTeam, awayTeam, onClos
                     </option>
 
                     <option value={match?.homeTeamID}>
-                        {match.homeTeamName}
+                        {match?.homeTeamName}
                     </option>
 
-                    <option value={match.awayTeamID}>
-                        {match.awayTeamName}
+                    <option value={match?.awayTeamID}>
+                        {match?.awayTeamName}
                     </option>
 
 

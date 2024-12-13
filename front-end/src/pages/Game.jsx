@@ -1,18 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import FootballPitch from '../components/game/FootballPitch';
 import PlayerList from '../components/game/PlayerList';
 import ActionList from '../components/game/ActionList';
 import ActionModal from '../components/game/ActionModal';
-import { getActions, getSquad } from '../services/game';
+import Stopwatch from '../components/game/Stopwatch';
+import { getActions, getSquad, sendAction } from '../services/game';
+import { useStopwatch } from 'react-timer-hook';
 
 
 const Game = () => {
     const location = useLocation(); // Get the state passed during navigation
-    const { selectedMatch } = location.state || {}; // Retrieve match data
+    const [selectedMatch, setSelectedMatch] = useState(null);
     const [homeTeam, setHomeTeam] = useState(null);
     const [awayTeam, setAwayTeam] = useState(null);
     const [actions, setActions] = useState([]);
+    const [lastAction, setLastAction] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPitchModalOpen, setIsPitchModalOpen] = useState(false);
+    const [selectedAction, setSelectedAction] = useState(null);
+
+    const [totalSeconds, setTotalSeconds] = useState(0);
+    const [isRunning, setIsRunning] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editableMinutes, setEditableMinutes] = useState(0);
+    const [editableSeconds, setEditableSeconds] = useState(0);
+
+    const [actionTime, setActionTime] = useState(null);
+
+    useEffect(() => {
+        console.log(isPitchModalOpen)
+        if (isModalOpen || isPitchModalOpen) {
+            setActionTime({
+                minutes: Math.floor(totalSeconds / 60),
+                seconds: totalSeconds % 60
+            });
+            console.log('Action Time:', actionTime);
+        }
+    }, [isModalOpen, isPitchModalOpen]);
+
+
+    useEffect(() => {
+        if (location.state) {
+            setSelectedMatch(location.state.selectedMatch);
+        }
+    }, [location]);
 
 
 
@@ -32,58 +64,63 @@ const Game = () => {
     }, [selectedMatch]);
 
 
-
-    console.log('Selected Match:', selectedMatch);
-    console.log('Actions:', actions);
-
-    const [lastAction, setLastAction] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedAction, setSelectedAction] = useState(null); // Ensure this is correctly set
-
     const handleActionClick = (action) => {
         setSelectedAction(action); // Set the selected action
+        console.log('action:', action);
+        console.log('selectedAction:', selectedAction);
         setIsModalOpen(true); // Open modal
     };
 
-    const handleActionSubmit = (actionData) => {
-        console.log('Action submitted:', actionData);
-        setLastAction(actionData);
-        setIsModalOpen(false); // Close modal after submitting
-    };
-
-    const handlePitchClick = (coords) => {
-        if (lastAction) {
-            const updatedAction = {
-                ...lastAction,
-                actionPointX: Math.round(coords.x * 100), // Convert to percentage
-                actionPointY: Math.round(coords.y * 100), // Convert to percentage
-            };
-            console.log('Updated action with coordinates:', updatedAction);
-            setLastAction(null); // Reset after setting coordinates
-        }
-    };
+    const handleActionSubmit = async (actionData) => {
+        // Perform final processing, such as sending the data to the server
+        console.log('Action data:', actionData);
+        const data = await sendAction(actionData, selectedMatch.matchID);
+        console.log('Action Submitted:', data);
+    }
 
     return (
         <main>
-            {/* Action List Component */}
+
+            <Stopwatch totalSeconds={totalSeconds}
+                setTotalSeconds={setTotalSeconds}
+                isRunning={isRunning}
+                setIsRunning={setIsRunning}
+                editMode={editMode}
+                setEditMode={setEditMode}
+                editableMinutes={editableMinutes}
+                setEditableMinutes={setEditableMinutes}
+                editableSeconds={editableSeconds}
+                setEditableSeconds={setEditableSeconds}
+
+            />
             <ActionList onActionClick={handleActionClick} actions={actions} />
 
             <div className="flex h-[500px] items-center justify-between ">
-                <PlayerList players={homeTeam} />
-                <FootballPitch actions={actions} match={selectedMatch} homeTeam={homeTeam} awayTeam={awayTeam} onClick={handlePitchClick} />
-                <PlayerList players={awayTeam} />
+                <PlayerList players={homeTeam} teamName={selectedMatch?.homeTeamName} />
+                <FootballPitch
+                    actions={actions}
+                    match={selectedMatch}
+                    homeTeam={homeTeam}
+                    awayTeam={awayTeam}
+                    onActionSubmit={handleActionSubmit}
+                    currentTime={actionTime}
+                    setIsPitchModalOpen={setIsPitchModalOpen}
+                />
+                <PlayerList players={awayTeam} teamName={selectedMatch?.awayTeamName} />
             </div>
 
             {/* Modal */}
             {isModalOpen && (
                 <ActionModal
+                    isPositional={false}
                     actions={actions}
                     match={selectedMatch}
                     homeTeam={homeTeam}
                     awayTeam={awayTeam}
                     onClose={() => setIsModalOpen(false)}
                     onActionSubmit={handleActionSubmit}
-                    selectedAction={selectedAction}  // Pass selected action to modal
+                    selection={selectedAction}  // Pass selected action to modal
+                    currentTime={actionTime}
                 />
             )}
 

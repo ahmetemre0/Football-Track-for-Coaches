@@ -1,38 +1,28 @@
 import Action from './Action';
-import { BellIcon as Ball, Flag, BellIcon as Whistle, RotateCcw, UserPlus, UserMinus } from 'lucide-react';
-import { useState } from 'react';
 
-const actions = [
-    { type: 1, icon: <Ball className="w-6 h-6" /> },
-    { type: 2, icon: <Flag className="w-6 h-6" /> },
-    { type: 3, icon: <Whistle className="w-6 h-6" /> },
-    { type: 4, icon: <RotateCcw className="w-6 h-6" /> },
-    { type: 5, icon: <UserPlus className="w-6 h-6" /> },
-    { type: 6, icon: <UserMinus className="w-6 h-6" /> },
-];
 
-export default function ActionList({ onActionSubmit, actions }) {
-    const [selectedAction, setSelectedAction] = useState(null);
+export default function ActionList({ actions, onActionClick }) {
+
 
     return (
         <header className="bg-white shadow">
-            <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Match Actions</h1>
-                <div className="flex space-x-4">
-                    {actions?.map((action) => (
-                        <Action
+            <div className="flex justify-center max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-evenly w-2/3">
+                    {actions?.map((action) => action.hasArea === 0 && (
+                        <div
                             key={action.ID}
-                            hasArea={action.hasArea}
-                            hasPlayer1={action.hasPlayer1}
-                            hasPlayer2={action.hasPlayer2}
-                            logo={action.logo}
-                            name={action.name}
-                            onActionSubmit={onActionSubmit}
-                            setSelectedAction={setSelectedAction}
-                        />
+                            className="flex flex-col items-center w-24 space-y-2" // Fixed width and spacing
+                        >
+                            <Action
+                                action={action}
+                                onActionClick={onActionClick}
+                            />
+                        </div>
                     ))}
                 </div>
             </div>
+
+
         </header>
     );
 }
