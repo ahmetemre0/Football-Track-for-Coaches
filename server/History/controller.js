@@ -116,7 +116,7 @@ exports.createHistory = async (req, res) => {
         }
 
         if (req.body.actionTypeID == 13) {
-            await Comp.substitute(req.params.matchid, req.body.actionTeamID, req.body.actionPlayer1ID, req.body.actionPlayer2ID);
+            await Comp.substitute(req.body.actionTeamID, req.params.matchid, req.body.actionPlayer1ID, req.body.actionPlayer2ID);
         }
 
         let history = await History.getByID(ID);
