@@ -40,6 +40,9 @@ app.use('/player', playerRouter);
 const actionRouter = require('./Action/router');
 app.use('/action', actionRouter);
 
+const syncRouter = require('./Sync/router');
+app.use('/sync', syncRouter);
+
 // start the server
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);
