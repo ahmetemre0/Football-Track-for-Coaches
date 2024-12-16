@@ -55,7 +55,8 @@ exports.createHistory = async (req, res) => {
             res.status(404).json({ message: 'Action not found', success: false });
             return;
         }
-        if (!req.body.minutes || req.body.minutes < 0) {
+        if (req.body.minutes === undefined || req.body.minutes < 0) {
+            console.log(req.body.minutes);
             res.status(400).json({ message: 'Minutes is required and must be greater than 0', success: false });
             return;
         }

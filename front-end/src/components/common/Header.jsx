@@ -9,7 +9,6 @@ function Header() {
           <li><Link to="/players" className="hover:underline">Players</Link></li>
           <li><Link to="/teams" className="hover:underline">Teams</Link></li>
           <li><Link to="/match" className="hover:underline">Matches</Link></li>
-          <li><Link to="/game" className="hover:underline">Game</Link></li>
         </ul>
       </nav>
     </header>

@@ -6,10 +6,13 @@ import Team from './pages/Team';
 import Player from './pages/Player';
 import Game from './pages/Game';
 import Match from './pages/Match';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
+
     <Router>
+      <Toaster />
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
@@ -25,6 +28,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+
   );
 }
 

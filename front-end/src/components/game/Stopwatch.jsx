@@ -50,7 +50,7 @@ export default function Stopwatch({ totalSeconds, setTotalSeconds, isRunning, se
     };
 
     return (
-        <div className="flex flex-col items-center space-y-4 p-4">
+        <div className="flex justify-center space-x-4 p-4 ">
             <div className="text-7xl font-mono">
                 {editMode ? (
                     <div className="flex items-center space-x-2">

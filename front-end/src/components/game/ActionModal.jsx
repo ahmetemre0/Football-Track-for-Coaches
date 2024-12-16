@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import ModalPlayerList from './ModalPlayerList';
 
-
 export default function ActionModal({ isPositional, actions, match, homeTeam, awayTeam, onClose, onActionSubmit, selection, currentTime }) {
     const [selectedAction, setSelectedAction] = useState(null);
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [selectedPlayers, setSelectedPlayers] = useState([]);
-
 
     const handlePlayerToggle = (playerId) => {
         setSelectedPlayers((prev) =>
@@ -26,6 +24,7 @@ export default function ActionModal({ isPositional, actions, match, homeTeam, aw
             seconds: currentTime?.seconds,
         };
         onActionSubmit(actionData);
+        onClose();
     };
 
     useEffect(() => {
@@ -36,18 +35,17 @@ export default function ActionModal({ isPositional, actions, match, homeTeam, aw
 
     return (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-md w-full md:w-3/4 lg:w-1/2 max-h-[66vh] overflow-y-auto">
-
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Select Match Action</h2>
 
             {/* Action Selection */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Action</label>
                 <select
-                    defaultValue={actions?.find((action) => action.name === selection?.name)?.ID || ''} // Match the action by name
+                    defaultValue={actions?.find((action) => action.name === selection?.name)?.ID || ''}
                     onChange={(e) => {
                         const selectedID = parseInt(e.target.value, 10);
                         const filteredAction = actions?.find((action) => action.ID === selectedID);
-                        setSelectedAction(filteredAction); // Set the selected action by name
+                        setSelectedAction(filteredAction);
                     }}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-2 px-3 text-sm"
                 >
@@ -75,27 +73,51 @@ export default function ActionModal({ isPositional, actions, match, homeTeam, aw
                     <option value="" disabled>
                         Select a team...
                     </option>
-
                     <option value={match?.homeTeamID}>
                         {match?.homeTeamName}
                     </option>
-
                     <option value={match?.awayTeamID}>
                         {match?.awayTeamName}
                     </option>
-
-
                 </select>
             </div>
 
             {/* Players List (only if a team is selected) */}
-            {selectedTeam && (
+            {selectedTeam && selectedAction?.name === 'Substitution' && (
+                <>
+                    <div className="mb-4 space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Players Out</label>
+                            <ModalPlayerList
+                                players={selectedTeam === match.homeTeamID ? homeTeam : awayTeam}
+                                selectedPlayers={selectedPlayers}
+                                onPlayerToggle={handlePlayerToggle}
+                                inMatch={1} // Filter players who are in the starting eleven
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Players In</label>
+                            <ModalPlayerList
+                                players={selectedTeam === match.homeTeamID ? homeTeam : awayTeam}
+                                selectedPlayers={selectedPlayers}
+                                onPlayerToggle={handlePlayerToggle}
+                                inMatch={0} // Filter players who are not in the starting eleven
+                            />
+                        </div>
+                    </div>
+
+                </>
+            )}
+
+            {/* Single Player List for Other Actions */}
+            {selectedTeam && selectedAction?.name !== 'Substitution' && (
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Players</label>
                     <ModalPlayerList
                         players={selectedTeam === match.homeTeamID ? homeTeam : awayTeam}
                         selectedPlayers={selectedPlayers}
                         onPlayerToggle={handlePlayerToggle}
+                        isFirstEleven={1} // Pass null or remove the prop to skip filtering
                     />
                 </div>
             )}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import FootballPitch from '../components/game/FootballPitch';
 import PlayerList from '../components/game/PlayerList';
@@ -6,7 +6,9 @@ import ActionList from '../components/game/ActionList';
 import ActionModal from '../components/game/ActionModal';
 import Stopwatch from '../components/game/Stopwatch';
 import { getActions, getSquad, sendAction } from '../services/game';
-import { useStopwatch } from 'react-timer-hook';
+import HistoryBoard from '../components/game/HistoryBoard';
+
+import { getHistory } from '../services/game';
 
 
 const Game = () => {
@@ -15,7 +17,6 @@ const Game = () => {
     const [homeTeam, setHomeTeam] = useState(null);
     const [awayTeam, setAwayTeam] = useState(null);
     const [actions, setActions] = useState([]);
-    const [lastAction, setLastAction] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPitchModalOpen, setIsPitchModalOpen] = useState(false);
     const [selectedAction, setSelectedAction] = useState(null);
@@ -27,6 +28,8 @@ const Game = () => {
     const [editableSeconds, setEditableSeconds] = useState(0);
 
     const [actionTime, setActionTime] = useState(null);
+    const [updateHistory, setUpdateHistory] = useState(false);
+    const [history, setHistory] = useState(null);
 
     useEffect(() => {
         console.log(isPitchModalOpen)
@@ -72,15 +75,63 @@ const Game = () => {
     };
 
     const handleActionSubmit = async (actionData) => {
-        // Perform final processing, such as sending the data to the server
         console.log('Action data:', actionData);
+
+        if (actionData.actionTypeID === 13) {
+            // Identify the team to update
+            const teamToUpdate = actionData.actionTeamID === selectedMatch.homeTeamID ? homeTeam : awayTeam;
+            const setTeamState = actionData.actionTeamID === selectedMatch.homeTeamID ? setHomeTeam : setAwayTeam;
+
+            console.log('Team to update:', teamToUpdate);
+            // Update the `isFirstEleven` field for both players
+            const updatedTeam = teamToUpdate.map(player => {
+                if (player.ID === actionData.actionPlayer1ID || player.ID === actionData.actionPlayer2ID) {
+                    return { ...player, inMatch: !player.inMatch };
+                }
+                return player;
+            });
+
+            console.log('Updated team:', updatedTeam);
+
+            // Update the state with the modified team
+            setTeamState(updatedTeam);
+        }
+
+        // Submit the action to the server
         const data = await sendAction(actionData, selectedMatch.matchID);
         console.log('Action Submitted:', data);
+
+        // Update the history to reflect the new action
+        setUpdateHistory(!updateHistory);
+    };
+
+
+    useEffect(() => {
+        if (selectedMatch) {
+            getHistory(selectedMatch.matchID)
+                .then((data) => setHistory(data))
+                .catch((error) => console.error(error));
+        }
+        console.log('History:', history);
     }
+        , [selectedMatch, updateHistory]);
+
+    useEffect(() => {
+        if (history && history.length > 0 && actionTime === null) {
+            const lastAction = history[history.length - 1];
+            setActionTime({
+                minutes: lastAction.minutes,
+                seconds: lastAction.seconds
+            });
+            setTotalSeconds(lastAction.minutes * 60 + lastAction.seconds);
+        }
+    }, [history]);
+
+
+
 
     return (
         <main>
-
             <Stopwatch totalSeconds={totalSeconds}
                 setTotalSeconds={setTotalSeconds}
                 isRunning={isRunning}
@@ -95,17 +146,20 @@ const Game = () => {
             />
             <ActionList onActionClick={handleActionClick} actions={actions} />
 
-            <div className="flex h-[500px] items-center justify-between ">
+            <div className="flex items-center justify-between ">
                 <PlayerList players={homeTeam} teamName={selectedMatch?.homeTeamName} />
-                <FootballPitch
-                    actions={actions}
-                    match={selectedMatch}
-                    homeTeam={homeTeam}
-                    awayTeam={awayTeam}
-                    onActionSubmit={handleActionSubmit}
-                    currentTime={actionTime}
-                    setIsPitchModalOpen={setIsPitchModalOpen}
-                />
+                <div>
+                    <FootballPitch
+                        actions={actions}
+                        match={selectedMatch}
+                        homeTeam={homeTeam}
+                        awayTeam={awayTeam}
+                        onActionSubmit={handleActionSubmit}
+                        currentTime={actionTime}
+                        setIsPitchModalOpen={setIsPitchModalOpen}
+                    />
+                    <HistoryBoard history={history} homeTeam={homeTeam} awayTeam={awayTeam} actions={actions} />
+                </div>
                 <PlayerList players={awayTeam} teamName={selectedMatch?.awayTeamName} />
             </div>
 
@@ -124,12 +178,6 @@ const Game = () => {
                 />
             )}
 
-            {/* Notification for setting coordinates */}
-            {lastAction && (
-                <div className="fixed bottom-4 right-4 bg-yellow-100 p-4 rounded-md shadow-md">
-                    <p className="text-sm">Click on the pitch to set action coordinates</p>
-                </div>
-            )}
         </main>
     );
 };

@@ -18,7 +18,6 @@ export default function Action({ action, onActionClick }) {
                     className="w-12 h-12" // Fixed size for the icon
                 />
             </button>
-            <span className="text-center">{action.name}</span>
         </div>
 
 
